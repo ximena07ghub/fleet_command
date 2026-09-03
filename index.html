@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Fleet Command</title>
+
+    <link
+        rel="stylesheet"
+        href="css/index.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <main class="pantalla-inicio">
+
+
+        <!-- CAPAS DEL FONDO -->
+
+        <div class="fondo-oscuro"></div>
+
+        <div class="luz-fondo"></div>
+
+
+
+        <!-- =========================================
+             PERFIL SUPERIOR
+
+        <div class="perfil-superior">
+
+            <div class="perfil-texto">
+
+                <span class="perfil-nombre">
+                    Jugador
+                </span>
+
+                <span class="perfil-nivel">
+                    Nivel 1
+                </span>
+
+            </div>
+
+
+            <div class="avatar">
+
+                <div class="avatar-cabeza"></div>
+
+                <div class="avatar-cuerpo"></div>
+
+            </div>
+
+        </div>
+        ========================================== -->
+
+
+        <!-- =========================================
+             CONTENIDO PRINCIPAL
+        ========================================== -->
+
+        <section class="contenido-inicio">
+
+
+            <!-- LOGO -->
+
+            <div class="zona-logo">
+
+                <img
+                    src="assets/img/logo.png"
+                    alt="Fleet Command"
+                    class="logo"
+                >
+
+
+                <p class="subtitulo">
+                    Estrategia naval
+                </p>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 MENÚ
+            ====================================== -->
+
+            <nav class="menu-principal">
+
+
+                <button
+                    class="opcion-menu seleccionada"
+                    data-destino="dashboard.html"
+                >
+
+                    <span class="flecha">
+                        ▶
+                    </span>
+
+                    <span>
+                        JUGAR
+                    </span>
+
+                </button>
+
+
+
+                <button
+                    class="opcion-menu"
+                    data-destino="perfil.html"
+                >
+
+                    <span class="flecha">
+                        ▶
+                    </span>
+
+                    <span>
+                        PERFIL
+                    </span>
+
+                </button>
+
+
+
+                <button
+                    class="opcion-menu"
+                    data-destino="reglas.html"
+                >
+
+                    <span class="flecha">
+                        ▶
+                    </span>
+
+                    <span>
+                        REGLAS
+                    </span>
+
+                </button>
+
+
+
+                <button
+                    class="opcion-menu"
+                    data-destino="ajustes.html"
+                >
+
+                    <span class="flecha">
+                        ▶
+                    </span>
+
+                    <span>
+                        AJUSTES
+                    </span>
+
+                </button>
+
+
+
+                <button
+                    class="opcion-menu opcion-salir"
+                    id="btnSalir"
+                >
+
+                    <span class="flecha">
+                        ▶
+                    </span>
+
+                    <span>
+                        SALIR
+                    </span>
+
+                </button>
+
+            </nav>
+
+        </section>
+
+
+
+        <!-- =========================================
+             INFORMACIÓN INFERIOR
+        ========================================== -->
+
+        <footer class="pie-inicio">
+
+            <span>
+                FLEET COMMAND
+            </span>
+
+            <div class="pie-centro">
+
+                <span class="punto"></span>
+
+                <span>
+                    Sistema listo
+                </span>
+
+            </div>
+
+            <span>
+                v0.1
+            </span>
+
+        </footer>
+
+
+    </main>
+
+
+    <script src="js/index.js"></script>
+
+</body>
+
+</html>

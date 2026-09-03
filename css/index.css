@@ -1,0 +1,991 @@
+/* =====================================================
+   FLEET COMMAND
+   PANTALLA PRINCIPAL
+===================================================== */
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root {
+
+    --fondo: #020913;
+
+    --cyan: #00f7ea;
+
+    --cyan-claro: #65fff6;
+
+    --cyan-suave: rgba(0, 247, 234, 0.15);
+
+    --texto: #efffff;
+
+    --texto-secundario: #9db7be;
+
+    --rojo: #ff4d4d;
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+html,
+body {
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow: hidden;
+
+}
+
+
+body {
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        var(--fondo);
+
+    color:
+        var(--texto);
+
+}
+
+
+/* =====================================================
+   PANTALLA
+===================================================== */
+
+.pantalla-inicio {
+
+    width: 100vw;
+
+    height: 100dvh;
+
+    position: relative;
+
+    overflow: hidden;
+
+
+    background-image:
+
+        url("../assets/img/fondo-dashboard.png");
+
+
+    background-size:
+        cover;
+
+
+    background-position:
+        center center;
+
+
+    background-repeat:
+        no-repeat;
+
+}
+
+
+/* =====================================================
+   CAPA OSCURA
+===================================================== */
+
+.fondo-oscuro {
+
+    position: absolute;
+
+    inset: 0;
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(0, 7, 16, 0.37) 0%,
+            rgba(1, 12, 24, 0.42) 40%,
+            rgba(0, 5, 15, 0.72) 100%
+        ),
+
+        linear-gradient(
+            180deg,
+            rgba(0, 6, 16, 0.20),
+            rgba(0, 8, 18, 0.55)
+        );
+
+
+    z-index: 1;
+
+}
+
+
+/* =====================================================
+   LUZ AMBIENTAL
+===================================================== */
+
+.luz-fondo {
+
+    position: absolute;
+
+    width: 55vw;
+
+    height: 55vw;
+
+    right: -20vw;
+
+    top: -25vw;
+
+
+    border-radius: 50%;
+
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(0, 247, 234, 0.10),
+            rgba(0, 247, 234, 0.02) 40%,
+            transparent 70%
+        );
+
+
+    z-index: 2;
+
+    pointer-events: none;
+
+}
+
+
+/* =====================================================
+   PERFIL SUPERIOR
+===================================================== */
+
+.perfil-superior {
+
+    position: absolute;
+
+    top:
+        clamp(15px, 3vh, 28px);
+
+    right:
+        clamp(20px, 3vw, 45px);
+
+
+    z-index: 10;
+
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+
+    padding:
+
+        7px 9px
+        7px 17px;
+
+
+    border:
+
+        1px solid
+        rgba(0, 247, 234, 0.18);
+
+
+    border-radius: 8px;
+
+
+    background:
+
+        rgba(2, 16, 27, 0.55);
+
+
+    backdrop-filter:
+        blur(7px);
+
+
+    -webkit-backdrop-filter:
+        blur(7px);
+
+
+    box-shadow:
+
+        0 8px 20px
+        rgba(0, 0, 0, 0.22);
+
+}
+
+
+.perfil-texto {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+}
+
+
+.perfil-nombre {
+
+    font-size:
+        clamp(11px, 1vw, 14px);
+
+    font-weight: 600;
+
+}
+
+
+.perfil-nivel {
+
+    margin-top: 1px;
+
+
+    color:
+        #72d6d2;
+
+
+    font-size:
+        clamp(8px, 0.7vw, 10px);
+
+}
+
+
+/* =====================================================
+   AVATAR
+===================================================== */
+
+.avatar {
+
+    width:
+        clamp(36px, 3.5vw, 48px);
+
+    aspect-ratio: 1;
+
+
+    position: relative;
+
+
+    border-radius: 50%;
+
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(14, 58, 68, 0.96),
+            rgba(3, 21, 31, 0.99)
+        );
+
+
+    border:
+
+        1px solid
+        rgba(0, 247, 234, 0.75);
+
+
+    box-shadow:
+
+        0 0 12px
+        rgba(0, 247, 234, 0.12);
+
+}
+
+
+.avatar-cabeza {
+
+    position: absolute;
+
+
+    width: 27%;
+
+    aspect-ratio: 1;
+
+
+    top: 19%;
+
+    left: 36.5%;
+
+
+    border-radius: 50%;
+
+
+    border:
+
+        2px solid
+        var(--cyan-claro);
+
+}
+
+
+.avatar-cuerpo {
+
+    position: absolute;
+
+
+    width: 50%;
+
+    height: 30%;
+
+
+    left: 25%;
+
+    bottom: 14%;
+
+
+    border:
+
+        2px solid
+        var(--cyan-claro);
+
+
+    border-bottom-color:
+        transparent;
+
+
+    border-radius:
+        50% 50% 35% 35%;
+
+}
+
+
+/* =====================================================
+   CONTENIDO CENTRAL
+===================================================== */
+
+.contenido-inicio {
+
+    width: 100%;
+
+    height: 100%;
+
+
+    position: relative;
+
+
+    z-index: 5;
+
+
+    display: grid;
+
+
+    grid-template-columns:
+
+        minmax(360px, 46%)
+
+        minmax(360px, 54%);
+
+
+    align-items: center;
+
+
+    padding:
+
+        8vh
+        clamp(40px, 7vw, 105px)
+        10vh;
+
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.zona-logo {
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+
+    transform:
+        translateY(-2vh);
+
+}
+
+
+.logo {
+
+    width:
+        clamp(320px, 37vw, 560px);
+
+
+    max-width: 100%;
+
+
+    display: block;
+
+
+    filter:
+
+        drop-shadow(
+            0 10px 14px
+            rgba(0, 0, 0, 0.42)
+        );
+
+}
+
+
+.subtitulo {
+
+    margin-top:
+        clamp(5px, 1vh, 10px);
+
+
+    padding:
+
+        5px 17px;
+
+
+    color:
+        rgba(216, 247, 250, 0.70);
+
+
+    border-top:
+
+        1px solid
+        rgba(0, 247, 234, 0.24);
+
+
+    font-size:
+        clamp(9px, 0.8vw, 12px);
+
+
+    letter-spacing:
+        4px;
+
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* =====================================================
+   MENÚ
+===================================================== */
+
+.menu-principal {
+
+    width:
+        min(500px, 80%);
+
+
+    justify-self: end;
+
+
+    display: flex;
+
+    flex-direction: column;
+
+
+    gap:
+        clamp(6px, 1.4vh, 13px);
+
+}
+
+
+/* =====================================================
+   OPCIONES
+===================================================== */
+
+.opcion-menu {
+
+    width: 100%;
+
+
+    height:
+        clamp(42px, 6.5vh, 58px);
+
+
+    padding:
+
+        0
+        clamp(18px, 2vw, 28px);
+
+
+    position: relative;
+
+
+    overflow: hidden;
+
+
+    display: flex;
+
+    align-items: center;
+
+
+    gap: 14px;
+
+
+    border:
+
+        1px solid
+        rgba(0, 247, 234, 0.12);
+
+
+    border-radius: 5px;
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(2, 15, 26, 0.47),
+            rgba(2, 18, 29, 0.30)
+        );
+
+
+    color:
+
+        rgba(235, 250, 251, 0.73);
+
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+
+    font-size:
+        clamp(15px, 1.45vw, 20px);
+
+
+    letter-spacing:
+        2px;
+
+
+    text-align: left;
+
+
+    cursor: pointer;
+
+
+    backdrop-filter:
+        blur(4px);
+
+
+    -webkit-backdrop-filter:
+        blur(4px);
+
+
+    transition:
+
+        transform 0.18s ease,
+
+        color 0.18s ease,
+
+        border-color 0.18s ease,
+
+        background 0.18s ease,
+
+        box-shadow 0.18s ease;
+
+}
+
+
+/* =====================================================
+   BORDE DECORATIVO
+===================================================== */
+
+.opcion-menu::before {
+
+    content: "";
+
+
+    position: absolute;
+
+
+    left: 4px;
+
+    top: 4px;
+
+
+    width: 25px;
+
+    height: 25px;
+
+
+    border-left:
+
+        2px solid
+        rgba(0, 247, 234, 0.15);
+
+
+    border-top:
+
+        2px solid
+        rgba(0, 247, 234, 0.15);
+
+
+    transition:
+
+        width 0.18s ease,
+
+        height 0.18s ease,
+
+        border-color 0.18s ease;
+
+}
+
+
+/* =====================================================
+   FLECHA
+===================================================== */
+
+.flecha {
+
+    width: 17px;
+
+
+    color:
+        transparent;
+
+
+    font-size:
+        13px;
+
+
+    transition:
+
+        color 0.18s ease,
+
+        transform 0.18s ease;
+
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+.opcion-menu:hover {
+
+    transform:
+
+        translateX(6px)
+        scale(1.015);
+
+
+    color:
+        white;
+
+
+    border-color:
+
+        rgba(0, 247, 234, 0.55);
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(5, 63, 71, 0.80),
+            rgba(3, 38, 48, 0.60)
+        );
+
+
+    box-shadow:
+
+        0 8px 18px
+        rgba(0, 0, 0, 0.22),
+
+        0 0 13px
+        rgba(0, 247, 234, 0.09);
+
+}
+
+
+.opcion-menu:hover .flecha {
+
+    color:
+        var(--cyan);
+
+
+    transform:
+        translateX(3px);
+
+}
+
+
+.opcion-menu:hover::before {
+
+    width: 37px;
+
+    height: 37px;
+
+
+    border-color:
+        rgba(0, 247, 234, 0.72);
+
+}
+
+
+/* =====================================================
+   SELECCIONADA
+===================================================== */
+
+.opcion-menu.seleccionada {
+
+    color:
+        #021718;
+
+
+    border-color:
+        rgba(117, 255, 246, 0.85);
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            #49e2d8,
+            #74fff3
+        );
+
+
+    box-shadow:
+
+        0 8px 20px
+        rgba(0, 0, 0, 0.25),
+
+        0 0 17px
+        rgba(0, 247, 234, 0.16);
+
+}
+
+
+.opcion-menu.seleccionada .flecha {
+
+    color:
+        #03272a;
+
+}
+
+
+.opcion-menu.seleccionada::before {
+
+    border-color:
+
+        rgba(0, 48, 49, 0.42);
+
+}
+
+
+/* =====================================================
+   SALIR
+===================================================== */
+
+.opcion-salir:hover {
+
+    border-color:
+        rgba(255, 83, 83, 0.50);
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(80, 22, 30, 0.68),
+            rgba(48, 16, 25, 0.44)
+        );
+
+}
+
+
+.opcion-salir:hover .flecha {
+
+    color:
+        #ff6565;
+
+}
+
+
+/* =====================================================
+   PIE
+===================================================== */
+
+.pie-inicio {
+
+    position: absolute;
+
+
+    z-index: 8;
+
+
+    left:
+        clamp(20px, 3vw, 45px);
+
+    right:
+        clamp(20px, 3vw, 45px);
+
+    bottom:
+        clamp(13px, 2.5vh, 25px);
+
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+
+    color:
+        rgba(190, 218, 221, 0.53);
+
+
+    font-size:
+        clamp(8px, 0.7vw, 10px);
+
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.pie-centro {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+}
+
+
+.punto {
+
+    width: 6px;
+
+    height: 6px;
+
+
+    border-radius: 50%;
+
+
+    background:
+        var(--cyan);
+
+
+    box-shadow:
+
+        0 0 8px
+        rgba(0, 247, 234, 0.7);
+
+}
+
+
+/* =====================================================
+   RESOLUCIONES PEQUEÑAS
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .contenido-inicio {
+
+        grid-template-columns: 1fr;
+
+
+        padding:
+
+            12vh
+            7vw
+            10vh;
+
+    }
+
+
+    .zona-logo {
+
+        align-self: end;
+
+    }
+
+
+    .logo {
+
+        width:
+            min(430px, 75vw);
+
+    }
+
+
+    .menu-principal {
+
+        width:
+            min(500px, 86vw);
+
+
+        justify-self: center;
+
+
+        align-self: start;
+
+    }
+
+
+    .subtitulo {
+
+        display: none;
+
+    }
+
+}
+
+
+@media (max-height: 650px) {
+
+    .contenido-inicio {
+
+        padding-top:
+            6vh;
+
+        padding-bottom:
+            8vh;
+
+    }
+
+
+    .opcion-menu {
+
+        height:
+            38px;
+
+    }
+
+
+    .menu-principal {
+
+        gap:
+            5px;
+
+    }
+
+}
