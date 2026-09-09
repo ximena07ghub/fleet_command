@@ -1,12 +1,7 @@
-/* =========================================================
-   FLEET COMMAND
-   DASHBOARD
-========================================================= */
+/* DASHBOARD*/
 
 
-/* =========================================================
-   VARIABLES
-========================================================= */
+/* VARIABLES*/
 
 :root {
 
@@ -41,9 +36,9 @@
 }
 
 
-/* =========================================================
+/* 
    RESET
-========================================================= */
+ */
 
 * {
 
@@ -85,9 +80,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    DASHBOARD
-========================================================= */
+ */
 
 .dashboard {
 
@@ -130,9 +125,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    SIDEBAR
-========================================================= */
+ */
 
 .sidebar {
     height: 100%;
@@ -170,9 +165,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    USUARIO
-========================================================= */
+ */
 
 .usuario {
 
@@ -303,9 +298,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    MENÚ
-========================================================= */
+ */
 
 .menu {
 
@@ -471,9 +466,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    CERRAR SESIÓN
-========================================================= */
+ */
 
 .cerrar-sesion {
     margin-top: auto;
@@ -545,9 +540,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    CONTENIDO
-========================================================= */
+ */
 
 .contenido {
 
@@ -587,9 +582,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    LOGO
-========================================================= */
+ */
 
 .encabezado {
 
@@ -631,9 +626,9 @@ body {
 }
 
 
-/* =========================================================
+/* 
    PANEL PRINCIPAL
-========================================================= */
+ */
 
 .panel-configuracion {
 
@@ -2437,4 +2432,273 @@ body {
 
     }
 
+}
+/* =========================================================
+   AJUSTES FINALES DE INTERFAZ - SEPT 2026
+   Mantiene el dashboard dentro de una sola pantalla.
+========================================================= */
+
+.panel-configuracion {
+    background:
+        linear-gradient(145deg, rgba(3, 18, 29, .88), rgba(3, 29, 42, .78));
+    border-color: rgba(0, 247, 234, .30);
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, .34),
+        inset 0 0 32px rgba(0, 247, 234, .035),
+        inset 0 0 70px rgba(0, 86, 180, .045);
+}
+
+.opcion,
+.dificultad-btn {
+    background: linear-gradient(180deg, rgba(6, 28, 38, .96), rgba(3, 17, 27, .98));
+}
+
+.opcion:hover,
+.dificultad-btn:hover {
+    background: linear-gradient(180deg, rgba(8, 47, 55, .98), rgba(4, 25, 35, .98));
+}
+
+.opcion.seleccionada,
+.dificultad-btn.seleccionada {
+    background: linear-gradient(180deg, rgba(8, 66, 70, .95), rgba(4, 31, 39, .98));
+}
+
+/* Los mapas aprovechan mejor el alto disponible sin generar scroll. */
+.mapa {
+    max-height: 182px;
+    transform-origin: center;
+}
+
+.mapa.seleccionada {
+    z-index: 5;
+    transform: scale(1.025);
+}
+
+.mapa.seleccionada img {
+    transform: scale(1.10);
+    filter: brightness(1.10) saturate(1.05);
+}
+
+.mapa.seleccionada .mapa-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(0, 7, 20, .36) 0%,
+        rgba(0, 7, 20, 0) 44%,
+        rgba(0, 8, 24, .28) 100%
+    );
+}
+
+.dificultad-opcion p strong {
+    color: var(--cyan-claro);
+    font-weight: 700;
+}
+
+.estado-configuracion {
+    min-width: 0;
+    max-width: min(330px, 31vw);
+    overflow: hidden;
+}
+
+#textoEstado {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#btnIniciar {
+    border-color: rgba(0, 247, 234, .76);
+    background: linear-gradient(180deg, rgba(24, 118, 116, .98), rgba(5, 65, 72, .98));
+    color: #efffff;
+    box-shadow:
+        0 7px 16px rgba(0, 0, 0, .28),
+        0 0 16px rgba(0, 247, 234, .10),
+        inset 0 0 14px rgba(255, 255, 255, .04);
+}
+
+#btnIniciar:hover {
+    background: linear-gradient(180deg, rgba(34, 148, 142, 1), rgba(8, 80, 86, 1));
+    box-shadow:
+        0 10px 22px rgba(0, 0, 0, .31),
+        0 0 17px rgba(0, 247, 234, .20);
+}
+
+/* El botón de Ajustes ahora es un botón real, no un enlace externo. */
+button.menu-btn {
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+/* =========================================================
+   MODAL DE AJUSTES DENTRO DE NAVE
+========================================================= */
+
+.modal-ajustes-dashboard {
+    width: min(760px, 92vw);
+    max-height: min(610px, 88dvh);
+    overflow: hidden;
+    background: linear-gradient(145deg, rgba(3, 25, 36, .985), rgba(1, 10, 19, .99));
+}
+
+.cabecera-ajustes-dashboard {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.ajustes-kicker {
+    margin: 0 0 5px;
+    color: #6ca5aa;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.cerrar-modal-dashboard {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(0,247,234,.28);
+    border-radius: 5px 12px 5px 12px;
+    background: rgba(0, 15, 24, .76);
+    color: var(--cyan-claro);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.ajustes-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.ajuste-dashboard-card {
+    min-height: 88px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    border: 1px solid rgba(0,247,234,.13);
+    background: rgba(0, 9, 17, .50);
+}
+
+.ajuste-dashboard-card h3 {
+    margin: 0 0 4px;
+    color: #d9fffc;
+    font-size: 16px;
+}
+
+.ajuste-dashboard-card p {
+    margin: 0;
+    color: #8eaeb3;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.ajuste-dashboard-rango {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+}
+
+.ajuste-dashboard-fullscreen {
+    grid-column: 1 / -1;
+}
+
+.dash-switch {
+    width: 56px;
+    height: 30px;
+    position: relative;
+    display: block;
+}
+
+.dash-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.dash-switch span {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(0,247,234,.24);
+    border-radius: 30px;
+    background: #14232b;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.dash-switch span::before {
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 3px;
+    top: 3px;
+    border-radius: 50%;
+    background: #66848a;
+    transition: .2s ease;
+}
+
+.dash-switch input:checked + span {
+    border-color: rgba(0,247,234,.72);
+    background: rgba(0,247,234,.17);
+}
+
+.dash-switch input:checked + span::before {
+    transform: translateX(26px);
+    background: var(--cyan-claro);
+    box-shadow: 0 0 10px rgba(0,247,234,.42);
+}
+
+.dash-rango {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dash-rango input {
+    min-width: 0;
+    flex: 1;
+    accent-color: #00d9cf;
+}
+
+.dash-rango span {
+    min-width: 42px;
+    color: var(--cyan-claro);
+    font-size: 12px;
+}
+
+.acciones-dashboard-modal {
+    margin-top: 16px;
+}
+
+@media (max-height: 720px) {
+    .mapa {
+        max-height: 150px;
+    }
+
+    .modal-ajustes-dashboard {
+        max-height: 94dvh;
+        padding: 22px;
+    }
+
+    .ajuste-dashboard-card {
+        min-height: 75px;
+        padding: 10px 13px;
+    }
+}
+
+@media (max-width: 700px) {
+    .ajustes-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ajuste-dashboard-fullscreen {
+        grid-column: auto;
+    }
+
+    .modal-ajustes-dashboard {
+        overflow-y: auto;
+    }
 }

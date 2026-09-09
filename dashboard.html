@@ -1,542 +1,211 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fleet Command | Dashboard</title>
-
-    <link
-        rel="stylesheet"
-        href="css/dashboard.css"
-    >
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
-
-
-<body>
-
+<body data-page="dashboard">
     <main class="dashboard">
-
-        <!-- =====================================================
-             BARRA LATERAL
-        ====================================================== -->
-
         <aside class="sidebar">
-
-            <!-- USUARIO -->
             <div class="usuario">
-
-                <div class="avatar">
-
-                    <!-- Avatar temporal -->
+                <div class="avatar" aria-hidden="true">
                     <div class="avatar-cabeza"></div>
-
                     <div class="avatar-cuerpo"></div>
-
                 </div>
-
-                <p class="nombre-usuario">
-                    Jugador
-                </p>
-
-                <span class="nivel-usuario">
-                    Nivel 1
-                </span>
-
+                <p class="nombre-usuario" id="nombreUsuarioDashboard">Jugador</p>
+                <span class="nivel-usuario" id="nivelUsuarioDashboard">Perfil local</span>
             </div>
 
-
-            <!-- MENÚ -->
-            <nav class="menu">
-
-                <a
-                    href="dashboard.html"
-                    class="menu-btn activo"
-                >
-                    <span class="menu-icon">
-                        ▶
-                    </span>
-
-                    <span>
-                        Jugar
-                    </span>
+            <nav class="menu" aria-label="Navegación de la nave">
+                <a href="dashboard.html" class="menu-btn activo">
+                    <span class="menu-icon"></span><span>Jugar</span>
                 </a>
-
-
-                <a
-                    href="reglas.html"
-                    class="menu-btn"
-                >
-                    <span class="menu-icon">
-                        ▣
-                    </span>
-
-                    <span>
-                        Reglas
-                    </span>
+                <a href="reglas.html?from=dashboard" class="menu-btn" id="btnReglasDashboard">
+                    <span class="menu-icon"></span><span>Reglas</span>
                 </a>
-
-
-                <a
-                    href="perfil.html"
-                    class="menu-btn"
-                >
-                    <span class="menu-icon">
-                        ●
-                    </span>
-
-                    <span>
-                        Perfil
-                    </span>
+                <a href="perfil.html?from=dashboard" class="menu-btn">
+                        <span class="menu-icon"> </span><span>Perfil</span>
                 </a>
-
-
-                <a
-                    href="ajustes.html"
-                    class="menu-btn"
-                >
-                    <span class="menu-icon">
-                        ⚙
-                    </span>
-
-                    <span>
-                        Ajustes
-                    </span>
-                </a>
-
+                <button type="button" class="menu-btn" id="btnAjustesDashboard">
+                    <span class="menu-icon"></span><span>Ajustes</span>
+                </button>
             </nav>
 
-
-            <!-- CERRAR SESIÓN -->
-            <a
-                href="index.html"
-                class="menu-btn cerrar-sesion"
-            >
-                <span class="menu-icon">
-                    ↪
-                </span>
-
-                <span>
-                    Cerrar sesión
-                </span>
+            <a href="index.html" class="menu-btn cerrar-sesion" id="btnSalirDashboard">
+                <span class="menu-icon">↪</span><span>Salir</span>
             </a>
-
         </aside>
 
-
-
-        <!-- =====================================================
-             CONTENIDO PRINCIPAL
-        ====================================================== -->
-
         <section class="contenido">
-
-
-            <!-- =================================================
-                 LOGO
-            ================================================== -->
-
             <header class="encabezado">
-
-                <img
-                    src="assets/img/logo.png"
-                    alt="Fleet Command"
-                    class="logo-fleet"
-                >
-
+                <img src="assets/img/logo.png" alt="Fleet Command" class="logo-fleet">
             </header>
 
-
-
-            <!-- =================================================
-                 PANEL DE CONFIGURACIÓN
-            ================================================== -->
-
-            <section class="panel-configuracion">
-
-
-                <!-- DETALLES DE ESQUINAS DEL PANEL -->
-
+            <section class="panel-configuracion" aria-label="Configuración de partida">
                 <span class="panel-esquina esquina-superior-izquierda"></span>
-
                 <span class="panel-esquina esquina-superior-derecha"></span>
-
                 <span class="panel-esquina esquina-inferior-izquierda"></span>
-
                 <span class="panel-esquina esquina-inferior-derecha"></span>
 
-
-
-                <!-- =============================================
-                     COLUMNA PRINCIPAL
-                ============================================== -->
-
                 <div class="configuracion-principal">
-
-
-                    <!-- =========================================
-                         1. MODO DE JUEGO
-                    ========================================== -->
-
                     <section class="seccion">
-
                         <h2 class="titulo-seccion">
-
-                            <span class="titulo-icono">
-                                ◈
-                            </span>
-
-                            <span>
-                                1. Modo de juego
-                            </span>
-
+                           
+                            <span>1. Modo de juego</span>
                         </h2>
 
-
-                        <!-- TIPO DE RIVAL -->
-
                         <div class="opciones dos-columnas">
-
-                            <button
-                                class="opcion seleccionada"
-                                data-grupo="rival"
-                                data-valor="online"
-                            >
-
-                                <span class="opcion-icono">
-                                    ◉
-                                </span>
-
-                                <span>
-                                    Online
-                                </span>
-
+                            <button class="opcion seleccionada" data-grupo="rival" data-valor="online">
+                                <span>Online</span>
                             </button>
-
-
-                            <button
-                                class="opcion"
-                                data-grupo="rival"
-                                data-valor="ia"
-                            >
-
-                                <span class="opcion-icono">
-                                    ▦
-                                </span>
-
-                                <span>
-                                    Contra IA
-                                </span>
-
+                            <button class="opcion" data-grupo="rival" data-valor="ia">
+                                <span>Contra IA</span>
                             </button>
-
                         </div>
-
-
-
-                        <!-- SEPARADOR -->
 
                         <div class="separador">
-
                             <span class="linea"></span>
-
-                            <span class="texto-separador">
-                                Selecciona el modo
-                            </span>
-
+                            <span class="texto-separador">Selecciona el modo</span>
                             <span class="linea"></span>
-
                         </div>
-
-
-
-                        <!-- MODO -->
 
                         <div class="opciones dos-columnas">
-
-                            <button
-                                class="opcion"
-                                data-grupo="modo"
-                                data-valor="clasico"
-                            >
-
-                                <span class="opcion-icono">
-                                    ◎
-                                </span>
-
-                                <span>
-                                    Clásico
-                                </span>
-
+                            <button class="opcion" data-grupo="modo" data-valor="clasico">
+                                <span>Clásico</span>
                             </button>
-
-
-                            <button
-                                class="opcion seleccionada"
-                                data-grupo="modo"
-                                data-valor="rafaga"
-                            >
-
-                                <span class="opcion-icono">
-                                    ↗
-                                </span>
-
-                                <span>
-                                    Ráfaga
-                                </span>
-
+                            <button class="opcion seleccionada" data-grupo="modo" data-valor="rafaga">
+                                <span>Ráfaga</span>
                             </button>
-
                         </div>
-
                     </section>
-
-
-
-                    <!-- =========================================
-                         2. MAPA
-                    ========================================== -->
 
                     <section class="seccion seccion-mapas">
-
-                        <h2 class="titulo-seccion">
-
-                            <span class="titulo-icono">
-                                ▣
-                            </span>
-
-                            <span>
-                                2. Selecciona el mapa
-                            </span>
-
-                        </h2>
-
-
+                        <h2 class="titulo-seccion"><span>2. Selecciona el mapa</span></h2>
                         <div class="mapas">
-
-
-                            <!-- PLAYA -->
-
-                            <button
-                                class="mapa seleccionada"
-                                data-grupo="mapa"
-                                data-valor="playa"
-                            >
-
-                                <img
-                                    src="assets/img/playa.png"
-                                    alt="Playa"
-                                >
-
+                            <button class="mapa seleccionada" data-grupo="mapa" data-valor="playa">
+                                <img src="assets/img/playa.png" alt="Playa">
                                 <span class="mapa-overlay"></span>
-
-                                <span class="nombre-mapa">
-                                    Playa
-                                </span>
-
-                                <span class="mapa-check">
-                                    ✓
-                                </span>
-
+                                <span class="nombre-mapa">Playa</span>
+                                <span class="mapa-check">✓</span>
                             </button>
 
-
-
-                            <!-- TORMENTA -->
-
-                            <button
-                                class="mapa"
-                                data-grupo="mapa"
-                                data-valor="tormenta"
-                            >
-
-                                <img
-                                    src="assets/img/tormenta.png"
-                                    alt="Tormenta"
-                                >
-
+                            <button class="mapa" data-grupo="mapa" data-valor="tormenta">
+                                <img src="assets/img/tormenta.png" alt="Tormenta">
                                 <span class="mapa-overlay"></span>
-
-                                <span class="nombre-mapa">
-                                    Tormenta
-                                </span>
-
-                                <span class="mapa-check">
-                                    ✓
-                                </span>
-
+                                <span class="nombre-mapa">Tormenta</span>
+                                <span class="mapa-check">✓</span>
                             </button>
 
-
-
-                            <!-- MAR ÁRTICO -->
-
-                            <button
-                                class="mapa"
-                                data-grupo="mapa"
-                                data-valor="artico"
-                            >
-
-                                <img
-                                    src="assets/img/artico.png"
-                                    alt="Mar Ártico"
-                                >
-
+                            <button class="mapa" data-grupo="mapa" data-valor="artico">
+                                <img src="assets/img/artico.png" alt="Mar Ártico">
                                 <span class="mapa-overlay"></span>
-
-                                <span class="nombre-mapa">
-                                    Mar Ártico
-                                </span>
-
-                                <span class="mapa-check">
-                                    ✓
-                                </span>
-
+                                <span class="nombre-mapa">Mar Ártico</span>
+                                <span class="mapa-check">✓</span>
                             </button>
-
                         </div>
-
                     </section>
-
                 </div>
-
-
-
-                <!-- =============================================
-                     COLUMNA DIFICULTAD
-                ============================================== -->
 
                 <aside class="dificultad">
-
                     <h2 class="titulo-seccion">
-
-                        <span class="titulo-icono">
-                            ▥
-                        </span>
-
-                        <span>
-                            3. Dificultad
-                        </span>
-
+                        <span>3. Dificultad</span>
                     </h2>
 
-
-
-                    <!-- NORMAL -->
-
                     <div class="dificultad-opcion">
-
-                        <button
-                            class="dificultad-btn seleccionada"
-                            data-grupo="dificultad"
-                            data-valor="normal"
-                        >
-
-                            <span class="dificultad-icono">
-                                ⚓
-                            </span>
-
-                            <span>
-                                Normal
-                            </span>
-
+                        <button class="dificultad-btn seleccionada" data-grupo="dificultad" data-valor="normal">
+                            <span>Normal</span>
                         </button>
-
-                        <p>
-                            Ideal para nuevos jugadores
-                        </p>
-
+                        <p><strong>10×10</strong> · 5 barcos<br>Ideal para empezar</p>
                     </div>
 
-
-
-                    <!-- DIFÍCIL -->
-
                     <div class="dificultad-opcion">
-
-                        <button
-                            class="dificultad-btn"
-                            data-grupo="dificultad"
-                            data-valor="dificil"
-                        >
-
-                            <span class="dificultad-icono">
-                                ◆
-                            </span>
-
-                            <span>
-                                Difícil
-                            </span>
-
+                        <button class="dificultad-btn" data-grupo="dificultad" data-valor="dificil">
+                            <span>Difícil</span>
                         </button>
-
-                        <p>
-                            Todo un desafío
-                        </p>
-
+                        <p><strong>12×12</strong> · 3 barcos<br>Mayor zona de búsqueda</p>
                     </div>
-
                 </aside>
-
             </section>
 
-
-
-            <!-- =================================================
-                 ZONA INFERIOR
-            ================================================== -->
-
             <footer class="zona-iniciar">
-
-
-                <!-- ESTADO -->
-
                 <div class="estado-configuracion">
-
                     <span class="estado-punto"></span>
-
-                    <span id="textoEstado">
-                        Ráfaga · Playa
-                    </span>
-
+                    <span id="textoEstado">Online · Ráfaga · Playa · Normal</span>
                 </div>
 
-
-
-                <!-- BOTÓN PRINCIPAL -->
-
-                <button id="btnIniciar">
-
-                    <span class="iniciar-icono">
-                        ◎
-                    </span>
-
-                    <span>
-                        INICIAR JUEGO
-                    </span>
-
-                </button>
-
-
-
-                <!-- ESPACIO PARA CENTRAR -->
-
+                <button id="btnIniciar"><span>INICIAR PARTIDA</span></button>
                 <div class="espacio-footer"></div>
-
             </footer>
-
         </section>
-
     </main>
 
+    <div class="modal-overlay" id="modalAjustesDashboard" role="dialog" aria-modal="true" aria-labelledby="tituloAjustesDashboard">
+        <section class="modal-hud modal-ajustes-dashboard">
+            <div class="cabecera-ajustes-dashboard">
+                <div>
+                    <p class="ajustes-kicker">CONFIGURACIÓN</p>
+                    <h2 class="modal-titulo" id="tituloAjustesDashboard">AJUSTES</h2>
+                </div>
+                <button class="cerrar-modal-dashboard" type="button" id="btnCerrarAjustesDashboard" aria-label="Cerrar ajustes">×</button>
+            </div>
 
+            <div class="ajustes-dashboard-grid">
+                <article class="ajuste-dashboard-card">
+                    <div>
+                        <h3>Música</h3>
+                        <p>Activa o desactiva la música de fondo.</p>
+                    </div>
+                    <label class="dash-switch">
+                        <input type="checkbox" id="dashMusicaActiva">
+                        <span></span>
+                    </label>
+                </article>
+
+                <article class="ajuste-dashboard-card">
+                    <div>
+                        <h3>Efectos</h3>
+                        <p>Sonido al hacer clic.</p>
+                    </div>
+                    <label class="dash-switch">
+                        <input type="checkbox" id="dashEfectosActivos">
+                        <span></span>
+                    </label>
+                </article>
+
+                <article class="ajuste-dashboard-card ajuste-dashboard-rango">
+                    <div>
+                        <h3>Volumen de música</h3>
+                    </div>
+                    <div class="dash-rango">
+                        <input id="dashVolumenMusica" type="range" min="0" max="100" step="1">
+                        <span id="dashValorMusica">32%</span>
+                    </div>
+                </article>
+
+                <article class="ajuste-dashboard-card ajuste-dashboard-rango">
+                    <div>
+                        <h3>Volumen de efectos</h3>
+                        <p>Controla la intensidad del sonido</p>
+                    </div>
+                    <div class="dash-rango">
+                        <input id="dashVolumenEfectos" type="range" min="0" max="100" step="1">
+                        <span id="dashValorEfectos">55%</span>
+                    </div>
+                </article>
+
+ 
+            </div>
+
+            <div class="modal-acciones acciones-dashboard-modal">
+                <button class="hud-btn peligro" type="button" id="btnSalirDesdeAjustes">SALIR </button>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/common.js"></script>
     <script src="js/dashboard.js"></script>
-
 </body>
-
 </html>

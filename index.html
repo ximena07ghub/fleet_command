@@ -1,223 +1,127 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fleet Command</title>
-
-    <link
-        rel="stylesheet"
-        href="css/index.css"
-    >
-
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
 </head>
-
-
-<body>
-
+<body data-page="index">
 
     <main class="pantalla-inicio">
+        <div class="capa-ambiente"></div>
+        <div class="barrido-luz"></div>
+        <div class="ruido-hud"></div>
+
+        <section class="marco-principal" aria-label="Menú principal de Fleet Command">
+            <div class="marco-imagen" aria-hidden="true"></div>
+
+            <header class="cabecera-menu">
+                <img src="assets/img/logo.png" alt="Fleet Command" class="logo">
+            </header>
+
+            <div class="contenido-menu">
+                <nav class="menu-principal" aria-label="Opciones principales">
+                    <button class="opcion-menu seleccionada" data-accion="nave" data-titulo="BIENVENIDO" data-descripcion="Identifícate para conservar tu perfil, victorias, derrotas e historial de partidas.">
+                        <span class="numero">01</span>
+                        <span class="texto-opcion">INICIAR</span>
+                        <span class="icono-opcion">▶</span>
+                    </button>
 
 
-        <!-- CAPAS DEL FONDO -->
+                    </button>
 
-        <div class="fondo-oscuro"></div>
+                    <button class="opcion-menu" data-accion="reglas" data-titulo="REGLAS" data-descripcion="Consulta la misión, los turnos y las reglas básicas antes de entrar en combate.">
+                        <span class="numero">03</span>
+                        <span class="texto-opcion">REGLAS</span>
+                    </button>
 
-        <div class="luz-fondo"></div>
+                    <button class="opcion-menu" data-accion="ajustes" data-titulo="AJUSTES" data-descripcion="Configura música, efectos, volumen y pantalla completa desde una sola sección.">
+                        <span class="numero">04</span>
+                        <span class="texto-opcion">AJUSTES</span>
+                    </button>
 
+                    <button class="opcion-menu opcion-salir" data-accion="salir" data-titulo="SALIR" data-descripcion="Desconecta la interfaz de Fleet Command. El navegador puede pedirte cerrar la pestaña manualmente.">
+                        <span class="numero">05</span>
+                        <span class="texto-opcion">SALIR</span>
+                        <span class="icono-opcion">↪</span>
+                    </button>
+                </nav>
 
+                <section class="panel-bienvenida" aria-live="polite">
+                    <div class="etiqueta-sistema">FLEET COMMAND</div>
+                    <h1 id="tituloPanel">BIENVENIDO</h1>
+                    <p id="descripcionPanel">
+                        Accede al puente de mando y configura el tipo de partida, mapa y dificultad.
+                    </p>
 
-        <!-- =========================================
-             PERFIL SUPERIOR
+           
 
-        <div class="perfil-superior">
-
-            <div class="perfil-texto">
-
-                <span class="perfil-nombre">
-                    Jugador
-                </span>
-
-                <span class="perfil-nivel">
-                    Nivel 1
-                </span>
-
+                    <button class="boton-principal" id="btnAccionPrincipal">
+                        <span class="texto-accion" id="textoAccionPrincipal">ENTRAR</span>
+                        <span>➜</span>
+                    </button>
+                </section>
             </div>
 
-
-            <div class="avatar">
-
-                <div class="avatar-cabeza"></div>
-
-                <div class="avatar-cuerpo"></div>
-
-            </div>
-
-        </div>
-        ========================================== -->
-
-
-        <!-- =========================================
-             CONTENIDO PRINCIPAL
-        ========================================== -->
-
-        <section class="contenido-inicio">
-
-
-            <!-- LOGO -->
-
-            <div class="zona-logo">
-
-                <img
-                    src="assets/img/logo.png"
-                    alt="Fleet Command"
-                    class="logo"
-                >
-
-
-                <p class="subtitulo">
-                    Estrategia naval
-                </p>
-
-            </div>
-
-
-
-            <!-- =====================================
-                 MENÚ
-            ====================================== -->
-
-            <nav class="menu-principal">
-
-
-                <button
-                    class="opcion-menu seleccionada"
-                    data-destino="dashboard.html"
-                >
-
-                    <span class="flecha">
-                        ▶
-                    </span>
-
-                    <span>
-                        JUGAR
-                    </span>
-
-                </button>
-
-
-
-                <button
-                    class="opcion-menu"
-                    data-destino="perfil.html"
-                >
-
-                    <span class="flecha">
-                        ▶
-                    </span>
-
-                    <span>
-                        PERFIL
-                    </span>
-
-                </button>
-
-
-
-                <button
-                    class="opcion-menu"
-                    data-destino="reglas.html"
-                >
-
-                    <span class="flecha">
-                        ▶
-                    </span>
-
-                    <span>
-                        REGLAS
-                    </span>
-
-                </button>
-
-
-
-                <button
-                    class="opcion-menu"
-                    data-destino="ajustes.html"
-                >
-
-                    <span class="flecha">
-                        ▶
-                    </span>
-
-                    <span>
-                        AJUSTES
-                    </span>
-
-                </button>
-
-
-
-                <button
-                    class="opcion-menu opcion-salir"
-                    id="btnSalir"
-                >
-
-                    <span class="flecha">
-                        ▶
-                    </span>
-
-                    <span>
-                        SALIR
-                    </span>
-
-                </button>
-
-            </nav>
-
+            <footer class="pie-menu">
+                <span>FLEET COMMAND </span>
+                <span>ESC · PANTALLA COMPLETA</span>
+            </footer>
         </section>
-
-
-
-        <!-- =========================================
-             INFORMACIÓN INFERIOR
-        ========================================== -->
-
-        <footer class="pie-inicio">
-
-            <span>
-                FLEET COMMAND
-            </span>
-
-            <div class="pie-centro">
-
-                <span class="punto"></span>
-
-                <span>
-                    Sistema listo
-                </span>
-
-            </div>
-
-            <span>
-                v0.1
-            </span>
-
-        </footer>
-
-
     </main>
 
+    <!-- LOGIN -->
+    <div class="modal-overlay" id="modalLogin" role="dialog" aria-modal="true" aria-labelledby="tituloLogin">
+        <section class="modal-hud">
+            <h2 class="modal-titulo" id="tituloLogin">INICIAR SESIÓN</h2>
+ 
 
+            <form id="formLogin">
+                <div class="campo">
+                    <label for="usuario">Usuario</label>
+                    <input id="usuario" name="usuario" type="text" autocomplete="username" maxlength="20" placeholder="Ej. Capitan01" required>
+                </div>
+
+                <div class="campo">
+                    <label for="password">Contraseña</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" maxlength="32" placeholder="Mínimo 4 caracteres" required>
+                </div>
+
+                <p class="mensaje-error" id="errorLogin"></p>
+
+                <div class="modal-acciones">
+                    <button class="hud-btn" type="button" data-cerrar-modal="modalLogin">CANCELAR</button>
+                    <button class="hud-btn" type="submit">ENTRAR</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- CONFIRMACIÓN SALIR -->
+    <div class="modal-overlay" id="modalSalir" role="dialog" aria-modal="true" aria-labelledby="tituloSalir">
+        <section class="modal-hud">
+            <h2 class="modal-titulo" id="tituloSalir">DESCONECTAR SISTEMA</h2>
+            <p class="modal-texto">
+                ¿Deseas salir de Fleet Command? 
+            </p>
+            <div class="modal-acciones">
+                <button class="hud-btn" type="button" data-cerrar-modal="modalSalir">CANCELAR</button>
+                <button class="hud-btn peligro" type="button" id="confirmarSalir">SALIR</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- PANTALLA FINAL SI EL NAVEGADOR NO PUEDE CERRAR LA PESTAÑA -->
+    <div class="pantalla-desconexion" id="pantallaDesconexion" aria-hidden="true">
+        <img src="assets/img/logo.png" alt="Fleet Command">
+        <h2>SISTEMA DESCONECTADO</h2>
+        <p>Puedes cerrar esta pestaña de forma segura.</p>
+        <button class="hud-btn" id="volverSistema">VOLVER AL SISTEMA</button>
+    </div>
+
+    <script src="js/common.js"></script>
     <script src="js/index.js"></script>
-
 </body>
-
 </html>

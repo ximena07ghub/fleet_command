@@ -1,0 +1,891 @@
+/* =====================================================
+   FLEET COMMAND
+   PAUSE MENU
+===================================================== */
+
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+:root {
+
+    --fondo:
+        #020a12;
+
+    --cyan:
+        #00f7ea;
+
+    --cyan-claro:
+        #68fff7;
+
+    --cyan-suave:
+        rgba(0, 247, 234, 0.16);
+
+    --texto:
+        #eaffff;
+
+    --texto-secundario:
+        #8fb5ba;
+
+    --rojo:
+        #ff5c67;
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+html,
+body {
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow: hidden;
+
+}
+
+
+body {
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        var(--fondo);
+
+    color:
+        var(--texto);
+
+}
+
+
+/* =====================================================
+   PANTALLA
+===================================================== */
+
+.pantalla-pausa {
+
+    width: 100vw;
+
+    height: 100dvh;
+
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    overflow: hidden;
+
+}
+
+
+/* =====================================================
+   FONDO
+===================================================== */
+
+.fondo-pausa {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        url("../assets/img/fondo-dashboard.jpg");
+
+    background-size:
+        cover;
+
+    background-position:
+        center;
+
+    background-repeat:
+        no-repeat;
+
+    filter:
+        blur(5px)
+        brightness(0.55);
+
+    transform:
+        scale(1.04);
+
+}
+
+
+/* =====================================================
+   CAPA OSCURA
+===================================================== */
+
+.capa-oscura {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(0, 8, 17, 0.76),
+            rgba(0, 13, 25, 0.50),
+            rgba(0, 7, 17, 0.78)
+        ),
+
+        linear-gradient(
+            180deg,
+            rgba(0, 6, 15, 0.45),
+            rgba(0, 5, 14, 0.74)
+        );
+
+}
+
+
+/* =====================================================
+   CONTENEDOR
+===================================================== */
+
+.contenedor-pausa {
+
+    position: relative;
+
+    z-index: 5;
+
+    width:
+        min(520px, 86vw);
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.logo-pausa {
+
+    width:
+        clamp(240px, 28vw, 390px);
+
+    margin-bottom:
+        clamp(13px, 2.5vh, 24px);
+
+    opacity:
+        0.92;
+
+    filter:
+
+        drop-shadow(
+            0 8px 14px
+            rgba(0, 0, 0, 0.45)
+        );
+
+}
+
+
+/* =====================================================
+   PANEL
+===================================================== */
+
+.panel-pausa {
+
+    width: 100%;
+
+    position: relative;
+
+    padding:
+
+        clamp(25px, 4vh, 38px)
+
+        clamp(25px, 3vw, 38px)
+
+        clamp(20px, 3vh, 30px);
+
+
+    border:
+
+        1px solid
+        rgba(0, 247, 234, 0.34);
+
+
+    border-radius:
+        12px;
+
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(3, 20, 31, 0.82),
+            rgba(2, 15, 27, 0.77)
+        );
+
+
+    backdrop-filter:
+        blur(12px);
+
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+
+    box-shadow:
+
+        0 20px 50px
+        rgba(0, 0, 0, 0.42),
+
+        0 0 18px
+        rgba(0, 247, 234, 0.05),
+
+        inset 0 0 24px
+        rgba(0, 247, 234, 0.025);
+
+}
+
+
+/* =====================================================
+   BORDE INTERIOR
+===================================================== */
+
+.panel-pausa::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 7px;
+
+    border:
+
+        1px solid
+        rgba(0, 247, 234, 0.06);
+
+    border-radius:
+        8px;
+
+    pointer-events:
+        none;
+
+}
+
+
+/* =====================================================
+   ESQUINAS HUD
+===================================================== */
+
+.esquina {
+
+    position: absolute;
+
+    width:
+        32px;
+
+    height:
+        32px;
+
+    pointer-events:
+        none;
+
+}
+
+
+.esquina-tl {
+
+    top: 8px;
+
+    left: 8px;
+
+    border-top:
+        2px solid var(--cyan);
+
+    border-left:
+        2px solid var(--cyan);
+
+    border-top-left-radius:
+        6px;
+
+}
+
+
+.esquina-tr {
+
+    top: 8px;
+
+    right: 8px;
+
+    border-top:
+        2px solid var(--cyan);
+
+    border-right:
+        2px solid var(--cyan);
+
+    border-top-right-radius:
+        6px;
+
+}
+
+
+.esquina-bl {
+
+    bottom: 8px;
+
+    left: 8px;
+
+    border-bottom:
+        2px solid var(--cyan);
+
+    border-left:
+        2px solid var(--cyan);
+
+    border-bottom-left-radius:
+        6px;
+
+}
+
+
+.esquina-br {
+
+    bottom: 8px;
+
+    right: 8px;
+
+    border-bottom:
+        2px solid var(--cyan);
+
+    border-right:
+        2px solid var(--cyan);
+
+    border-bottom-right-radius:
+        6px;
+
+}
+
+
+/* =====================================================
+   ENCABEZADO
+===================================================== */
+
+.encabezado-pausa {
+
+    text-align:
+        center;
+
+    margin-bottom:
+        clamp(18px, 3vh, 28px);
+
+}
+
+
+.kicker {
+
+    margin-bottom:
+        4px;
+
+    color:
+        #72d8d4;
+
+    font-size:
+        clamp(9px, 0.8vw, 11px);
+
+    letter-spacing:
+        3px;
+
+}
+
+
+.encabezado-pausa h1 {
+
+    color:
+        var(--cyan-claro);
+
+    font-size:
+        clamp(30px, 4vw, 47px);
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        4px;
+
+    text-shadow:
+
+        0 0 12px
+        rgba(0, 247, 234, 0.14);
+
+}
+
+
+.linea-titulo {
+
+    width:
+        85%;
+
+    height:
+        1px;
+
+    margin:
+        13px auto 0;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(0, 247, 234, 0.70),
+            transparent
+        );
+
+}
+
+
+/* =====================================================
+   MENÚ
+===================================================== */
+
+.menu-pausa {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap:
+        clamp(8px, 1.5vh, 13px);
+
+}
+
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.boton-pausa {
+
+    width:
+        100%;
+
+    height:
+        clamp(45px, 6.5vh, 58px);
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        14px;
+
+    padding:
+
+        0
+        clamp(18px, 2vw, 26px);
+
+
+    border:
+
+        1px solid
+        rgba(0, 247, 234, 0.20);
+
+
+    border-radius:
+        8px;
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(5, 27, 39, 0.94),
+            rgba(4, 18, 31, 0.94)
+        );
+
+
+    color:
+        #d8eef0;
+
+
+    font-size:
+        clamp(13px, 1.3vw, 17px);
+
+
+    font-weight:
+        600;
+
+
+    letter-spacing:
+        1px;
+
+
+    cursor:
+        pointer;
+
+
+    transition:
+
+        transform 0.18s ease,
+
+        border-color 0.18s ease,
+
+        background 0.18s ease,
+
+        box-shadow 0.18s ease,
+
+        color 0.18s ease;
+
+}
+
+
+/* =====================================================
+   ESQUINA DE BOTÓN
+===================================================== */
+
+.boton-pausa::after {
+
+    content: "";
+
+    position:
+        absolute;
+
+    top:
+        4px;
+
+    right:
+        4px;
+
+    width:
+        20px;
+
+    height:
+        20px;
+
+    border-top:
+
+        1px solid
+        rgba(0, 247, 234, 0.30);
+
+
+    border-right:
+
+        1px solid
+        rgba(0, 247, 234, 0.30);
+
+
+    transition:
+
+        width 0.18s ease,
+
+        height 0.18s ease,
+
+        border-color 0.18s ease;
+
+}
+
+
+/* =====================================================
+   ICONO
+===================================================== */
+
+.indicador {
+
+    width:
+        24px;
+
+    color:
+        #64f5ed;
+
+    text-align:
+        center;
+
+    font-size:
+        17px;
+
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+.boton-pausa:hover {
+
+    transform:
+
+        translateX(4px)
+        scale(1.015);
+
+
+    color:
+        white;
+
+
+    border-color:
+
+        rgba(0, 247, 234, 0.65);
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(6, 48, 57, 0.98),
+            rgba(4, 28, 41, 0.98)
+        );
+
+
+    box-shadow:
+
+        0 7px 17px
+        rgba(0, 0, 0, 0.25),
+
+        0 0 13px
+        rgba(0, 247, 234, 0.10);
+
+}
+
+
+.boton-pausa:hover::after {
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    border-color:
+        var(--cyan);
+
+}
+
+
+/* =====================================================
+   SELECCIONADO
+===================================================== */
+
+.boton-pausa.seleccionado {
+
+    border-color:
+        var(--cyan);
+
+
+    color:
+        #ffffff;
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(7, 63, 69, 0.98),
+            rgba(4, 36, 48, 0.98)
+        );
+
+
+    box-shadow:
+
+        0 0 14px
+        rgba(0, 247, 234, 0.15),
+
+        inset 0 0 12px
+        rgba(0, 247, 234, 0.035);
+
+}
+
+
+/* =====================================================
+   BOTÓN PELIGRO
+===================================================== */
+
+.boton-pausa.peligro {
+
+    color:
+        #f4dadd;
+
+}
+
+
+.boton-pausa.peligro .indicador {
+
+    color:
+        #ff6a73;
+
+}
+
+
+.boton-pausa.peligro:hover {
+
+    border-color:
+        rgba(255, 89, 99, 0.65);
+
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(69, 21, 30, 0.96),
+            rgba(40, 14, 24, 0.97)
+        );
+
+
+    box-shadow:
+
+        0 7px 17px
+        rgba(0, 0, 0, 0.25),
+
+        0 0 12px
+        rgba(255, 80, 90, 0.08);
+
+}
+
+
+.boton-pausa.peligro:hover::after {
+
+    border-color:
+        #ff6a73;
+
+}
+
+
+/* =====================================================
+   ESTADO INFERIOR
+===================================================== */
+
+.estado-pausa {
+
+    margin-top:
+        clamp(18px, 3vh, 25px);
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    color:
+        var(--texto-secundario);
+
+    font-size:
+        clamp(8px, 0.7vw, 10px);
+
+    letter-spacing:
+        2px;
+
+}
+
+
+.estado-punto {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--cyan);
+
+    box-shadow:
+
+        0 0 8px
+        rgba(0, 247, 234, 0.7);
+
+}
+
+
+/* =====================================================
+   ALTURAS PEQUEÑAS
+===================================================== */
+
+@media (max-height: 680px) {
+
+    .logo-pausa {
+
+        width:
+            220px;
+
+        margin-bottom:
+            10px;
+
+    }
+
+
+    .panel-pausa {
+
+        padding:
+            20px 25px;
+
+    }
+
+
+    .encabezado-pausa {
+
+        margin-bottom:
+            14px;
+
+    }
+
+
+    .boton-pausa {
+
+        height:
+            41px;
+
+    }
+
+
+    .menu-pausa {
+
+        gap:
+            7px;
+
+    }
+
+
+    .estado-pausa {
+
+        margin-top:
+            14px;
+
+    }
+
+}

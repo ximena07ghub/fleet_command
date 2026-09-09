@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fleet Command | Pausa</title>
+
+    <link rel="stylesheet" href="css/pause.css">
+</head>
+
+<body>
+
+    <main class="pantalla-pausa">
+
+        <!-- Fondo -->
+        <div class="fondo-pausa"></div>
+
+        <!-- Oscurecimiento -->
+        <div class="capa-oscura"></div>
+
+        <!-- Contenido -->
+        <section class="contenedor-pausa">
+
+            <!-- Logo -->
+            <img
+                src="assets/img/logo.png"
+                alt="Fleet Command"
+                class="logo-pausa"
+            >
+
+            <!-- Panel -->
+            <div class="panel-pausa">
+
+                <!-- Esquinas decorativas -->
+                <span class="esquina esquina-tl"></span>
+                <span class="esquina esquina-tr"></span>
+                <span class="esquina esquina-bl"></span>
+                <span class="esquina esquina-br"></span>
+
+                <!-- Título -->
+                <div class="encabezado-pausa">
+
+                    <p class="kicker">
+                        PARTIDA EN CURSO
+                    </p>
+
+                    <h1>
+                        PAUSA
+                    </h1>
+
+                    <div class="linea-titulo"></div>
+
+                </div>
+
+
+                <!-- Menú -->
+                <nav class="menu-pausa">
+
+                    <button
+                        class="boton-pausa seleccionado"
+                        data-accion="continuar"
+                    >
+
+                        <span class="indicador">
+                            ▶
+                        </span>
+
+                        <span>
+                            CONTINUAR
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="boton-pausa"
+                        data-accion="reiniciar"
+                    >
+
+                        <span class="indicador">
+                            ◈
+                        </span>
+
+                        <span>
+                            REINICIAR PARTIDA
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="boton-pausa"
+                        data-accion="ajustes"
+                    >
+
+                        <span class="indicador">
+                            ⚙
+                        </span>
+
+                        <span>
+                            AJUSTES
+                        </span>
+
+                    </button>
+
+
+                    <button
+                        class="boton-pausa peligro"
+                        data-accion="salir"
+                    >
+
+                        <span class="indicador">
+                            ↪
+                        </span>
+
+                        <span>
+                            SALIR AL MENÚ
+                        </span>
+
+                    </button>
+
+                </nav>
+
+
+                <!-- Estado -->
+                <div class="estado-pausa">
+
+                    <span class="estado-punto"></span>
+
+                    <span>
+                        SISTEMA EN ESPERA
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/pause.js"></script>
+
+</body>
+
+</html>
