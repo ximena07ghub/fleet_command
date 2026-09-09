@@ -1,12 +1,7 @@
-// ========================================================
-// FLEET COMMAND
-// LOADING
-// ========================================================
+// Pantalla de carga del sistema.
 
 
-// ========================================================
-// ELEMENTOS
-// ========================================================
+// Elementos animados de carga.
 
 const barra =
     document.getElementById(
@@ -33,9 +28,7 @@ const puntosCarga =
 
 
 
-// ========================================================
-// RECUPERAR DATOS
-// ========================================================
+// Destino guardado desde otra ventana.
 
 const destino =
     sessionStorage.getItem(
@@ -59,9 +52,7 @@ mensajeTexto.textContent =
 
 
 
-// ========================================================
-// PROGRESO
-// ========================================================
+// Avance visual de la barra.
 
 let progreso = 0;
 
@@ -146,9 +137,7 @@ const intervalo =
 
 
 
-// ========================================================
-// CAMBIO DE MENSAJES
-// ========================================================
+// Cambia mensajes por porcentaje.
 
 function actualizarMensaje(
     porcentaje
@@ -200,9 +189,7 @@ function actualizarMensaje(
 
 
 
-// ========================================================
-// PUNTOS ANIMADOS DEL TÍTULO
-// ========================================================
+// Anima puntos del título.
 
 let cantidadPuntos = 1;
 

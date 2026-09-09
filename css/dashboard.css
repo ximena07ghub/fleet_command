@@ -1,7 +1,7 @@
-/* DASHBOARD*/
+﻿/* Dashboard principal */
 
 
-/* VARIABLES*/
+/* Variables del dashboard */
 
 :root {
 
@@ -36,9 +36,7 @@
 }
 
 
-/* 
-   RESET
- */
+/* Reset local */
 
 * {
 
@@ -80,9 +78,7 @@ body {
 }
 
 
-/* 
-   DASHBOARD
- */
+/* Fondo del dashboard */
 
 .dashboard {
 
@@ -125,9 +121,7 @@ body {
 }
 
 
-/* 
-   SIDEBAR
- */
+/* Barra lateral */
 
 .sidebar {
     height: 100%;
@@ -165,9 +159,7 @@ body {
 }
 
 
-/* 
-   USUARIO
- */
+/* Perfil lateral */
 
 .usuario {
 
@@ -298,9 +290,7 @@ body {
 }
 
 
-/* 
-   MENÚ
- */
+/* Menu lateral */
 
 .menu {
 
@@ -466,9 +456,7 @@ body {
 }
 
 
-/* 
-   CERRAR SESIÓN
- */
+/* Boton cerrar sesion */
 
 .cerrar-sesion {
     margin-top: auto;
@@ -540,9 +528,7 @@ body {
 }
 
 
-/* 
-   CONTENIDO
- */
+/* Contenido principal */
 
 .contenido {
 
@@ -582,9 +568,7 @@ body {
 }
 
 
-/* 
-   LOGO
- */
+/* Logo central */
 
 .encabezado {
 
@@ -626,9 +610,7 @@ body {
 }
 
 
-/* 
-   PANEL PRINCIPAL
- */
+/* Panel principal */
 
 .panel-configuracion {
 
@@ -768,9 +750,7 @@ body {
 }
 
 
-/* =========================================================
-   ESQUINAS TECNOLÓGICAS DEL PANEL
-========================================================= */
+/* ESQUINAS TECNOLÓGICAS DEL PANEL */
 
 .panel-esquina {
 
@@ -886,9 +866,7 @@ body {
 }
 
 
-/* =========================================================
-   CONFIGURACIÓN PRINCIPAL
-========================================================= */
+/* CONFIGURACIÓN PRINCIPAL */
 
 .configuracion-principal {
 
@@ -925,9 +903,7 @@ body {
 }
 
 
-/* =========================================================
-   TÍTULOS
-========================================================= */
+/* TÍTULOS */
 
 .titulo-seccion {
 
@@ -983,9 +959,7 @@ body {
 }
 
 
-/* =========================================================
-   OPCIONES
-========================================================= */
+/* OPCIONES */
 
 .opciones {
 
@@ -1011,9 +985,7 @@ body {
 }
 
 
-/* =========================================================
-   BOTONES PRINCIPALES
-========================================================= */
+/* BOTONES PRINCIPALES */
 
 .opcion {
 
@@ -1281,9 +1253,7 @@ body {
 }
 
 
-/* =========================================================
-   SEPARADOR
-========================================================= */
+/* SEPARADOR */
 
 .separador {
 
@@ -1338,9 +1308,7 @@ body {
 }
 
 
-/* =========================================================
-   MAPAS
-========================================================= */
+/* MAPAS */
 
 .seccion-mapas {
 
@@ -1684,9 +1652,7 @@ body {
 }
 
 
-/* =========================================================
-   DIFICULTAD
-========================================================= */
+/* DIFICULTAD */
 
 .dificultad {
 
@@ -1966,9 +1932,7 @@ body {
 }
 
 
-/* =========================================================
-   PIE / INICIAR
-========================================================= */
+/* PIE / INICIAR */
 
 .zona-iniciar {
 
@@ -1989,9 +1953,7 @@ body {
 }
 
 
-/* =========================================================
-   ESTADO
-========================================================= */
+/* ESTADO */
 
 .estado-configuracion {
 
@@ -2036,9 +1998,7 @@ body {
 }
 
 
-/* =========================================================
-   BOTÓN INICIAR
-========================================================= */
+/* BOTÓN INICIAR */
 
 #btnIniciar {
 
@@ -2255,10 +2215,7 @@ body {
 }
 
 
-/* =========================================================
-   LAPTOPS BAJAS
-   EJEMPLO: 1366 x 768
-========================================================= */
+/* Ajuste para laptops bajas */
 
 @media (max-height: 720px) {
 
@@ -2375,9 +2332,7 @@ body {
 }
 
 
-/* =========================================================
-   PANTALLAS ANGOSTAS
-========================================================= */
+/* PANTALLAS ANGOSTAS */
 
 @media (max-width: 950px) {
 
@@ -2433,10 +2388,7 @@ body {
     }
 
 }
-/* =========================================================
-   AJUSTES FINALES DE INTERFAZ - SEPT 2026
-   Mantiene el dashboard dentro de una sola pantalla.
-========================================================= */
+/* Ajustes finales de dashboard */
 
 .panel-configuracion {
     background:
@@ -2529,9 +2481,7 @@ button.menu-btn {
     cursor: pointer;
 }
 
-/* =========================================================
-   MODAL DE AJUSTES DENTRO DE NAVE
-========================================================= */
+/* MODAL DE AJUSTES DENTRO DE NAVE */
 
 .modal-ajustes-dashboard {
     width: min(760px, 92vw);

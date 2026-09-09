@@ -10,18 +10,22 @@
 <body data-page="index">
 
     <main class="pantalla-inicio">
+        <!-- Capas visuales del fondo -->
         <div class="capa-ambiente"></div>
         <div class="barrido-luz"></div>
         <div class="ruido-hud"></div>
 
+        <!-- Marco principal del menu -->
         <section class="marco-principal" aria-label="Menú principal de Fleet Command">
             <div class="marco-imagen" aria-hidden="true"></div>
 
+            <!-- Logo del juego -->
             <header class="cabecera-menu">
                 <img src="assets/img/logo.png" alt="Fleet Command" class="logo">
             </header>
 
             <div class="contenido-menu">
+                <!-- Opciones principales -->
                 <nav class="menu-principal" aria-label="Opciones principales">
                     <button class="opcion-menu seleccionada" data-accion="nave" data-titulo="BIENVENIDO" data-descripcion="Identifícate para conservar tu perfil, victorias, derrotas e historial de partidas.">
                         <span class="numero">01</span>
@@ -49,6 +53,7 @@
                     </button>
                 </nav>
 
+                <!-- Panel informativo dinamico -->
                 <section class="panel-bienvenida" aria-live="polite">
                     <div class="etiqueta-sistema">FLEET COMMAND</div>
                     <h1 id="tituloPanel">BIENVENIDO</h1>
@@ -72,7 +77,7 @@
         </section>
     </main>
 
-    <!-- LOGIN -->
+    <!-- Modal de inicio de sesion -->
     <div class="modal-overlay" id="modalLogin" role="dialog" aria-modal="true" aria-labelledby="tituloLogin">
         <section class="modal-hud">
             <h2 class="modal-titulo" id="tituloLogin">INICIAR SESIÓN</h2>
@@ -99,7 +104,7 @@
         </section>
     </div>
 
-    <!-- CONFIRMACIÓN SALIR -->
+    <!-- Confirmacion para salir -->
     <div class="modal-overlay" id="modalSalir" role="dialog" aria-modal="true" aria-labelledby="tituloSalir">
         <section class="modal-hud">
             <h2 class="modal-titulo" id="tituloSalir">DESCONECTAR SISTEMA</h2>
@@ -113,7 +118,7 @@
         </section>
     </div>
 
-    <!-- PANTALLA FINAL SI EL NAVEGADOR NO PUEDE CERRAR LA PESTAÑA -->
+    <!-- Pantalla si no cierra pestaña -->
     <div class="pantalla-desconexion" id="pantallaDesconexion" aria-hidden="true">
         <img src="assets/img/logo.png" alt="Fleet Command">
         <h2>SISTEMA DESCONECTADO</h2>
@@ -121,6 +126,7 @@
         <button class="hud-btn" id="volverSistema">VOLVER AL SISTEMA</button>
     </div>
 
+    <!-- Logica compartida y menu -->
     <script src="js/common.js"></script>
     <script src="js/index.js"></script>
 </body>

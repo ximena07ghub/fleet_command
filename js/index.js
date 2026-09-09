@@ -1,5 +1,5 @@
 
-
+// Elementos principales del menú.
 const opciones = document.querySelectorAll(".opcion-menu");
 const opcionesLista = Array.from(opciones);
 const tituloPanel = document.getElementById("tituloPanel");
@@ -11,6 +11,7 @@ const textoSesion = document.getElementById("textoSesion");
 const perfilPanel = document.getElementById("perfilPanel");
 const estadoAudioPie = document.getElementById("estadoAudioPie");
 
+// Modal de acceso del jugador.
 const modalLogin = document.getElementById("modalLogin");
 const formLogin = document.getElementById("formLogin");
 const usuarioInput = document.getElementById("usuario");
@@ -19,6 +20,7 @@ const errorLogin = document.getElementById("errorLogin");
 
 let accionSeleccionada = "nave";
 
+// Refresca sesión y audio visibles.
 function actualizarSesionVisual() {
     const perfil = FleetApp.obtenerPerfil();
 
@@ -46,6 +48,7 @@ function actualizarSesionVisual() {
     }
 }
 
+// Marca opción activa del menú.
 function seleccionarOpcion(boton) {
     if (!boton) return;
 
@@ -67,6 +70,7 @@ function seleccionarOpcion(boton) {
     textoAccionPrincipal.textContent = textosBoton[accionSeleccionada];
 }
 
+// Mueve selección con teclado.
 function moverSeleccion(delta) {
     const indiceActual = Math.max(0, opcionesLista.findIndex((opcion) => opcion.classList.contains("seleccionada")));
     const nuevoIndice = (indiceActual + delta + opcionesLista.length) % opcionesLista.length;
@@ -75,14 +79,17 @@ function moverSeleccion(delta) {
     nuevaOpcion.focus({ preventScroll: true });
 }
 
+// Abre un modal HUD.
 function abrirModal(modal) {
     modal.classList.add("abierto");
 }
 
+// Cierra un modal HUD.
 function cerrarModal(modal) {
     modal.classList.remove("abierto");
 }
 
+// Ejecuta la opción elegida.
 function ejecutarAccion(accion) {
     switch (accion) {
         case "nave": {
@@ -118,6 +125,7 @@ function ejecutarAccion(accion) {
     }
 }
 
+// Eventos del menú principal.
 opciones.forEach((boton) => {
     boton.addEventListener("mouseenter", () => seleccionarOpcion(boton));
     boton.addEventListener("focus", () => seleccionarOpcion(boton));
@@ -126,6 +134,7 @@ opciones.forEach((boton) => {
 
 btnAccionPrincipal.addEventListener("click", () => ejecutarAccion(accionSeleccionada));
 
+// Botones genéricos para cerrar modales.
 document.querySelectorAll("[data-cerrar-modal]").forEach((boton) => {
     boton.addEventListener("click", () => {
         const modal = document.getElementById(boton.dataset.cerrarModal);
@@ -133,12 +142,14 @@ document.querySelectorAll("[data-cerrar-modal]").forEach((boton) => {
     });
 });
 
+// Cierra modal al tocar fondo.
 document.querySelectorAll(".modal-overlay").forEach((modal) => {
     modal.addEventListener("click", (evento) => {
         if (evento.target === modal) cerrarModal(modal);
     });
 });
 
+// Controla navegación por teclado.
 document.addEventListener("keydown", (evento) => {
     const modalAbierto = document.querySelector(".modal-overlay.abierto");
 
@@ -170,6 +181,7 @@ document.addEventListener("keydown", (evento) => {
     }
 }, true);
 
+// Valida login y entra al dashboard.
 formLogin.addEventListener("submit", (evento) => {
     evento.preventDefault();
     errorLogin.textContent = "";
@@ -190,6 +202,7 @@ formLogin.addEventListener("submit", (evento) => {
     }, 850);
 });
 
+// Muestra salida si no cierra pestaña.
 document.getElementById("confirmarSalir").addEventListener("click", () => {
     cerrarModal(document.getElementById("modalSalir"));
 
@@ -202,6 +215,7 @@ document.getElementById("confirmarSalir").addEventListener("click", () => {
     }, 120);
 });
 
+// Regresa desde pantalla desconectada.
 document.getElementById("volverSistema").addEventListener("click", () => {
     const pantalla = document.getElementById("pantallaDesconexion");
     pantalla.classList.remove("visible");

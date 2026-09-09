@@ -10,10 +10,12 @@
 <body data-page="perfil">
     <main class="pagina-sistema">
         <div class="contenedor-sistema">
+            <!-- Logo superior del sistema -->
             <header class="barra-sistema">
                 <img class="logo-sistema" src="assets/img/logo.png" alt="Fleet Command">
             </header>
 
+            <!-- Panel del perfil local -->
             <section class="panel-sistema">
 
             <button
@@ -25,6 +27,7 @@
                 ×
             </button>
 
+                <!-- Identidad del jugador -->
                 <p class="kicker">EXPEDIENTE // COMANDANTE</p>
                 <div class="perfil-encabezado">
                     <div class="avatar-perfil"></div>
@@ -34,6 +37,7 @@
                     </div>
                 </div>
 
+                <!-- Estadisticas acumuladas -->
                 <div class="estadisticas">
                     <article><span id="partidasPerfil">0</span><small>PARTIDAS</small></article>
                     <article><span id="victoriasPerfil">0</span><small>VICTORIAS</small></article>
@@ -41,6 +45,7 @@
                     <article><span id="efectividadPerfil">0%</span><small>EFECTIVIDAD</small></article>
                 </div>
 
+                <!-- Historial de partidas -->
                 <section class="historial-panel">
                     <div class="historial-titulo">
                         <h2>HISTORIAL DE COMBATE</h2>
@@ -52,6 +57,7 @@
         </div>
     </main>
 
+    <!-- Logica compartida y perfil -->
     <script src="js/common.js"></script>
     <script src="js/perfil.js"></script>
 </body>

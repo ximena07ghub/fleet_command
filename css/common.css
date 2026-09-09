@@ -1,3 +1,4 @@
+/* Variables compartidas */
 :root {
     --fondo: #010712;
     --panel: rgba(2, 18, 31, 0.88);
@@ -11,10 +12,12 @@
     --verde: #69ffd7;
 }
 
+/* Caja consistente */
 * {
     box-sizing: border-box;
 }
 
+/* Base global */
 html,
 body {
     margin: 0;
@@ -24,6 +27,7 @@ body {
     font-family: "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
+/* Tipografia heredada */
 button,
 input,
 a {
@@ -35,6 +39,7 @@ a {
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Enfoque accesible */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible {

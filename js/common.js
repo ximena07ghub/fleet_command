@@ -1,23 +1,16 @@
-// ==========================================================
-// FLEET COMMAND - FUNCIONES COMPARTIDAS
-// Este archivo controla:
-// - ajustes de audio
-// - sonido de click
-// - música por segmento
-// - sesión local de demostración
-// - historial de victorias/derrotas
-// - pantalla completa con ESC
-// ==========================================================
+// Funciones compartidas del sistema.
 
 (function () {
     "use strict";
 
+    // Claves usadas en almacenamiento local.
     const CLAVES = {
         ajustes: "fleetAjustes",
         usuarios: "fleetUsuarios",
         sesion: "fleetSesion"
     };
 
+    // Preferencias iniciales de audio.
     const AJUSTES_DEFECTO = {
         musica: true,
         efectos: true,
@@ -29,6 +22,7 @@
     let musica = null;
     let temporizadorMusica = null;
 
+    // Lee datos guardados con respaldo.
     function leerJSON(clave, respaldo) {
         try {
             const valor = localStorage.getItem(clave);
@@ -38,10 +32,12 @@
         }
     }
 
+    // Guarda datos como JSON local.
     function guardarJSON(clave, valor) {
         localStorage.setItem(clave, JSON.stringify(valor));
     }
 
+    // Mezcla ajustes guardados y defecto.
     function obtenerAjustes() {
         return {
             ...AJUSTES_DEFECTO,
@@ -49,6 +45,7 @@
         };
     }
 
+    // Actualiza ajustes y volumen activo.
     function guardarAjustes(nuevos) {
         const ajustes = {
             ...obtenerAjustes(),
@@ -60,9 +57,7 @@
         return ajustes;
     }
 
-    // SONIDO DE CLICK
-
-
+    // Genera sonido alternativo de click.
     function crearBeep() {
         const ajustes = obtenerAjustes();
         if (!ajustes.efectos) return;
@@ -89,6 +84,7 @@
         }
     }
 
+    // Reproduce el efecto local de click.
     function reproducirClickLocal() {
         const ajustes = obtenerAjustes();
         if (!ajustes.efectos) return;
@@ -103,6 +99,7 @@
         reproducirClickLocal();
     }
 
+    // Activa sonidos en botones y enlaces.
     function instalarSonidosUI() {
         document.addEventListener("click", (evento) => {
             if (evento.target.closest("button, a, [data-sonido-ui]")) {
@@ -111,10 +108,7 @@
         });
     }
 
-    // ------------------------------------------------------
-    // MÚSICA:
-    // 
-
+    // Ajusta música según página actual.
     function aplicarVolumenMusica() {
         if (!musica) return;
 
@@ -129,6 +123,7 @@
         if (!ajustes.musica) musica.pause();
     }
 
+    // Inicia música en pantallas principales.
     function iniciarMusica() {
         const pagina = document.body.dataset.page || "otra";
         if (pagina !== "index" && pagina !== "dashboard") return;
@@ -172,6 +167,7 @@
         }
     }
 
+    // Desbloquea música tras interacción.
     function instalarInicioMusica() {
         iniciarMusica();
 
@@ -185,10 +181,7 @@
         document.addEventListener("keydown", activar);
     }
 
-    // 
-    // PANTALLA CON ESC
-  
-
+    // Alterna modo de pantalla completa.
     async function alternarPantallaCompleta() {
         try {
             if (!document.fullscreenElement) {
@@ -201,6 +194,7 @@
         }
     }
 
+    // Usa Escape para pantalla completa.
     function instalarEscapeFullscreen() {
         document.addEventListener("keydown", (evento) => {
             if (evento.key !== "Escape") return;
@@ -214,13 +208,12 @@
         });
     }
 
-    // USUARIOS / SESIÓN LOCAL 
-    // 
-
+    // Recupera perfiles locales.
     function obtenerUsuarios() {
         return leerJSON(CLAVES.usuarios, {});
     }
 
+    // Consulta la sesión actual.
     function usuarioActual() {
         try {
             return sessionStorage.getItem(CLAVES.sesion) || "";
@@ -229,6 +222,7 @@
         }
     }
 
+    // Valida o crea usuario local.
     function iniciarSesion(usuario, password) {
         const nombre = String(usuario || "").trim();
         const clave = String(password || "");
@@ -267,10 +261,12 @@
         return { ok: true, usuario: usuarios[id], nuevo: esNuevo };
     }
 
+    // Limpia la sesión activa.
     function cerrarSesion() {
         sessionStorage.removeItem(CLAVES.sesion);
     }
 
+    // Devuelve el perfil conectado.
     function obtenerPerfil() {
         const id = usuarioActual();
         if (!id) return null;
@@ -278,6 +274,7 @@
         return usuarios[id] || null;
     }
 
+    // Registra resultado de partida.
     function registrarResultado(resultado, detalle) {
         const id = usuarioActual();
         if (!id) return false;
@@ -307,9 +304,7 @@
         return true;
     }
 
-    // NAVEGACIÓN CON LOADING
-
-
+    // Redirige usando pantalla de carga.
     function irConLoading(destino, mensaje) {
         sessionStorage.setItem("fleetDestino", destino);
         sessionStorage.setItem("fleetMensajeCarga", mensaje || "Preparando sistema...");
@@ -318,6 +313,7 @@
 
     
 
+    // Muestra mensajes breves en pantalla.
     function mostrarToast(mensaje, duracion) {
         let toast = document.getElementById("fleetToast");
 
@@ -337,7 +333,7 @@
         }, duracion || 2200);
     }
 
-    // API sencilla disponible para los demás archivos JS.
+    // API global para otras ventanas.
     window.FleetApp = {
         obtenerAjustes,
         guardarAjustes,

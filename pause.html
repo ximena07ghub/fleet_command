@@ -14,32 +14,32 @@
 
     <main class="pantalla-pausa">
 
-        <!-- Fondo -->
+        <!-- Fondo desenfocado -->
         <div class="fondo-pausa"></div>
 
-        <!-- Oscurecimiento -->
+        <!-- Capa oscura -->
         <div class="capa-oscura"></div>
 
-        <!-- Contenido -->
+        <!-- Contenido centrado -->
         <section class="contenedor-pausa">
 
-            <!-- Logo -->
+            <!-- Logo superior -->
             <img
                 src="assets/img/logo.png"
                 alt="Fleet Command"
                 class="logo-pausa"
             >
 
-            <!-- Panel -->
+            <!-- Panel de pausa -->
             <div class="panel-pausa">
 
-                <!-- Esquinas decorativas -->
+                <!-- Esquinas HUD -->
                 <span class="esquina esquina-tl"></span>
                 <span class="esquina esquina-tr"></span>
                 <span class="esquina esquina-bl"></span>
                 <span class="esquina esquina-br"></span>
 
-                <!-- Título -->
+                <!-- Titulo de pausa -->
                 <div class="encabezado-pausa">
 
                     <p class="kicker">
@@ -55,7 +55,7 @@
                 </div>
 
 
-                <!-- Menú -->
+                <!-- Opciones de pausa -->
                 <nav class="menu-pausa">
 
                     <button
@@ -63,10 +63,7 @@
                         data-accion="continuar"
                     >
 
-                        <span class="indicador">
-                            ▶
-                        </span>
-
+                    
                         <span>
                             CONTINUAR
                         </span>
@@ -79,9 +76,7 @@
                         data-accion="reiniciar"
                     >
 
-                        <span class="indicador">
-                            ◈
-                        </span>
+                
 
                         <span>
                             REINICIAR PARTIDA
@@ -95,9 +90,7 @@
                         data-accion="ajustes"
                     >
 
-                        <span class="indicador">
-                            ⚙
-                        </span>
+                      
 
                         <span>
                             AJUSTES
@@ -111,9 +104,7 @@
                         data-accion="salir"
                     >
 
-                        <span class="indicador">
-                            ↪
-                        </span>
+                  
 
                         <span>
                             SALIR AL MENÚ
@@ -124,7 +115,7 @@
                 </nav>
 
 
-                <!-- Estado -->
+                <!-- Estado del sistema -->
                 <div class="estado-pausa">
 
                     <span class="estado-punto"></span>
@@ -142,6 +133,7 @@
     </main>
 
 
+    <!-- Logica de pausa -->
     <script src="js/pause.js"></script>
 
 </body>

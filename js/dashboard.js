@@ -1,18 +1,20 @@
-
-// DASHBOARD / SELECCIÓN DE PARTIDA
+// Selección de partida.
 const perfilActual = FleetApp.obtenerPerfil();
 
+// Bloquea acceso sin sesión.
 if (!perfilActual) {
     sessionStorage.setItem("fleetAviso", "Inicia sesión para entrar a NAVE.");
     window.location.href = "index.html";
 }
 
+// Muestra resumen del jugador.
 if (perfilActual) {
     document.getElementById("nombreUsuarioDashboard").textContent = perfilActual.nombre;
     document.getElementById("nivelUsuarioDashboard").textContent =
         `${perfilActual.victorias || 0} V · ${perfilActual.derrotas || 0} D`;
 }
 
+// Configuración inicial del combate.
 const configuracion = {
     rival: "online",
     modo: "rafaga",
@@ -24,6 +26,7 @@ const opciones = document.querySelectorAll("[data-grupo]");
 const btnIniciar = document.getElementById("btnIniciar");
 const textoEstado = document.getElementById("textoEstado");
 
+// Cambia opciones seleccionadas.
 opciones.forEach((boton) => {
     boton.addEventListener("click", () => {
         const grupo = boton.dataset.grupo;
@@ -37,6 +40,7 @@ opciones.forEach((boton) => {
     });
 });
 
+// Resume configuración elegida.
 function actualizarEstado() {
     const mapaNombre = {
         playa: "Playa",
@@ -63,6 +67,7 @@ function actualizarEstado() {
         `${rivalNombre[configuracion.rival]} · ${modoNombre[configuracion.modo]} · ${mapaNombre[configuracion.mapa]} · ${dificultadNombre[configuracion.dificultad]}`;
 }
 
+// Guarda partida elegida.
 btnIniciar.addEventListener("click", () => {
     localStorage.setItem("fleetCommandConfig", JSON.stringify(configuracion));
 
@@ -84,7 +89,7 @@ btnIniciar.addEventListener("click", () => {
 
 
 
-// AJUSTES DENTRO DEL DASHBOARD
+// Ajustes dentro del dashboard.
 
 const modalAjustes = document.getElementById("modalAjustesDashboard");
 const btnAjustes = document.getElementById("btnAjustesDashboard");
@@ -99,6 +104,7 @@ const dashValorMusica = document.getElementById("dashValorMusica");
 const dashValorEfectos = document.getElementById("dashValorEfectos");
 
 
+// Carga controles de audio.
 function cargarAjustesDashboard() {
 
     const ajustes = FleetApp.obtenerAjustes();
@@ -120,6 +126,7 @@ function cargarAjustesDashboard() {
 }
 
 
+// Guarda cambios de audio.
 function guardarAjustesDashboard() {
 
     FleetApp.guardarAjustes({
@@ -150,6 +157,7 @@ function guardarAjustesDashboard() {
 }
 
 
+// Abre modal de ajustes.
 function abrirAjustesDashboard() {
 
     cargarAjustesDashboard();
@@ -158,6 +166,7 @@ function abrirAjustesDashboard() {
 }
 
 
+// Cierra modal de ajustes.
 function cerrarAjustesDashboard() {
 
     modalAjustes.classList.remove("abierto");
@@ -165,7 +174,7 @@ function cerrarAjustesDashboard() {
 
 
 
-// ABRIR AJUSTES
+// Botón para abrir ajustes.
 
 btnAjustes.addEventListener(
     "click",
@@ -173,7 +182,7 @@ btnAjustes.addEventListener(
 );
 
 
-// X → CIERRA EL MODAL
+// Botón X del modal.
 
 btnCerrarAjustes.addEventListener(
     "click",
@@ -181,7 +190,7 @@ btnCerrarAjustes.addEventListener(
 );
 
 
-// CONTROLES DE AUDIO
+// Controles de música y efectos.
 
 [
     dashMusicaActiva,
@@ -205,7 +214,7 @@ btnCerrarAjustes.addEventListener(
 
 
 
-// CLICK FUERA DEL PANEL → CIERRA AJUSTES
+// Fondo del modal cierra ajustes.
 
 modalAjustes.addEventListener(
     "click",
@@ -221,7 +230,7 @@ modalAjustes.addEventListener(
 );
 
 
-// ESC → CIERRA AJUSTES
+// Escape cierra ajustes abiertos.
 
 document.addEventListener(
     "keydown",
@@ -243,7 +252,7 @@ document.addEventListener(
 );
 
 
-// SALIR → INDEX
+// Salida desde ajustes.
 
 btnSalirDesdeAjustes.addEventListener(
     "click",

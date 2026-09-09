@@ -1,3 +1,4 @@
+// Controles de audio generales.
 const musicaActiva = document.getElementById("musicaActiva");
 const efectosActivos = document.getElementById("efectosActivos");
 const volumenMusica = document.getElementById("volumenMusica");
@@ -5,6 +6,7 @@ const volumenEfectos = document.getElementById("volumenEfectos");
 const valorMusica = document.getElementById("valorMusica");
 const valorEfectos = document.getElementById("valorEfectos");
 
+// Recupera ajustes guardados.
 function cargarAjustes() {
     const ajustes = FleetApp.obtenerAjustes();
 
@@ -15,11 +17,13 @@ function cargarAjustes() {
     actualizarEtiquetas();
 }
 
+// Actualiza porcentajes visibles.
 function actualizarEtiquetas() {
     valorMusica.textContent = `${volumenMusica.value}%`;
     valorEfectos.textContent = `${volumenEfectos.value}%`;
 }
 
+// Guarda cambios de sonido.
 function guardar() {
     FleetApp.guardarAjustes({
         musica: musicaActiva.checked,
@@ -31,12 +35,14 @@ function guardar() {
     actualizarEtiquetas();
 }
 
+// Escucha interruptores y rangos.
 [musicaActiva, efectosActivos, volumenMusica, volumenEfectos].forEach((control) => {
     control.addEventListener("input", guardar);
     control.addEventListener("change", guardar);
 });
 
 
+// Cierra según pantalla anterior.
 const btnCerrarPanelSistema = document.getElementById("btnCerrarPanelSistema");
 
 btnCerrarPanelSistema.addEventListener("click", () => {
@@ -50,6 +56,7 @@ btnCerrarPanelSistema.addEventListener("click", () => {
     }
 });
 
+// Limpia sesión local.
 document.getElementById("btnCerrarSesion").addEventListener("click", () => {
     FleetApp.cerrarSesion();
     FleetApp.mostrarToast("Sesión cerrada");

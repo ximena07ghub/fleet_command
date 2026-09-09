@@ -1,5 +1,4 @@
-
-// BOTONES
+// Botones del menú de pausa.
 
 const botonesPausa =
     document.querySelectorAll(
@@ -8,9 +7,7 @@ const botonesPausa =
 
 
 
-// SELECCIÓN VISUAL
-
-
+// Marca opción activa.
 botonesPausa.forEach(
     (boton) => {
 
@@ -57,9 +54,7 @@ botonesPausa.forEach(
                 );
 
 
-                // Por ahora solo mostramos
-                // qué botón fue presionado.
-
+                // Acción pendiente del juego.
                 console.log(
                     "Acción seleccionada:",
                     boton.dataset.accion

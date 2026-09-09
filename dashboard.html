@@ -9,7 +9,9 @@
 </head>
 <body data-page="dashboard">
     <main class="dashboard">
+        <!-- Barra lateral de navegacion -->
         <aside class="sidebar">
+            <!-- Datos del jugador activo -->
             <div class="usuario">
                 <div class="avatar" aria-hidden="true">
                     <div class="avatar-cabeza"></div>
@@ -19,6 +21,7 @@
                 <span class="nivel-usuario" id="nivelUsuarioDashboard">Perfil local</span>
             </div>
 
+            <!-- Accesos de la nave -->
             <nav class="menu" aria-label="Navegación de la nave">
                 <a href="dashboard.html" class="menu-btn activo">
                     <span class="menu-icon"></span><span>Jugar</span>
@@ -40,10 +43,12 @@
         </aside>
 
         <section class="contenido">
+            <!-- Encabezado visual del dashboard -->
             <header class="encabezado">
                 <img src="assets/img/logo.png" alt="Fleet Command" class="logo-fleet">
             </header>
 
+            <!-- Panel para configurar partida -->
             <section class="panel-configuracion" aria-label="Configuración de partida">
                 <span class="panel-esquina esquina-superior-izquierda"></span>
                 <span class="panel-esquina esquina-superior-derecha"></span>
@@ -51,6 +56,7 @@
                 <span class="panel-esquina esquina-inferior-derecha"></span>
 
                 <div class="configuracion-principal">
+                    <!-- Seleccion de modo -->
                     <section class="seccion">
                         <h2 class="titulo-seccion">
                            
@@ -82,6 +88,7 @@
                         </div>
                     </section>
 
+                    <!-- Seleccion de mapa -->
                     <section class="seccion seccion-mapas">
                         <h2 class="titulo-seccion"><span>2. Selecciona el mapa</span></h2>
                         <div class="mapas">
@@ -109,6 +116,7 @@
                     </section>
                 </div>
 
+                <!-- Seleccion de dificultad -->
                 <aside class="dificultad">
                     <h2 class="titulo-seccion">
                         <span>3. Dificultad</span>
@@ -130,6 +138,7 @@
                 </aside>
             </section>
 
+            <!-- Barra inferior de inicio -->
             <footer class="zona-iniciar">
                 <div class="estado-configuracion">
                     <span class="estado-punto"></span>
@@ -142,6 +151,7 @@
         </section>
     </main>
 
+    <!-- Modal rapido de ajustes -->
     <div class="modal-overlay" id="modalAjustesDashboard" role="dialog" aria-modal="true" aria-labelledby="tituloAjustesDashboard">
         <section class="modal-hud modal-ajustes-dashboard">
             <div class="cabecera-ajustes-dashboard">
@@ -205,6 +215,7 @@
         </section>
     </div>
 
+    <!-- Logica compartida y dashboard -->
     <script src="js/common.js"></script>
     <script src="js/dashboard.js"></script>
 </body>

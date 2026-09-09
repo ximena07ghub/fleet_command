@@ -10,10 +10,12 @@
 <body data-page="reglas">
     <main class="pagina-sistema pagina-compacta pagina-reglas">
         <div class="contenedor-sistema">
+            <!-- Logo superior del sistema -->
             <header class="barra-sistema">
                 <img class="logo-sistema" src="assets/img/logo.png" alt="Fleet Command">
             </header>
 
+            <!-- Panel de reglas del juego -->
             <section class="panel-sistema panel-reglas">
                 <button
                     class="cerrar-panel-sistema"
@@ -29,6 +31,7 @@
                         <p class="kicker">ARCHIVO TÁCTICO</p>
                         <h1>REGLAS</h1>
                         <p class="descripcion-reglas">Consulta la misión, los turnos y las reglas básicas antes de entrar en combate.</p>
+                <!-- Navegacion por temas -->
                 <div class="reglas-layout">
                     <nav class="reglas-tabs" aria-label="Secciones de reglas">
                         <button class="regla-tab activa" data-regla="intro">01 · ¿DE QUÉ TRATA?</button>
@@ -38,6 +41,7 @@
                         <button class="regla-tab" data-regla="items">05 · ÍTEMS</button>
                     </nav>
 
+                    <!-- Contenido activo de reglas -->
                     <div class="reglas-contenido" aria-live="polite">
                         <section class="regla-panel activa" data-panel-regla="intro">
                             <p class="regla-codigo">FLEET COMMAND </p>
@@ -145,6 +149,7 @@
         </div>
     </main>
 
+    <!-- Logica compartida y reglas -->
     <script src="js/common.js"></script>
     <script src="js/reglas.js"></script>
 </body>

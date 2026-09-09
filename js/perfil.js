@@ -1,8 +1,11 @@
+// Perfil guardado del jugador.
 const perfil = FleetApp.obtenerPerfil();
 
+// Regresa si no hay sesión.
 if (!perfil) {
     window.location.href = "index.html";
 } else {
+    // Muestra estadísticas principales.
     document.getElementById("nombrePerfil").textContent = perfil.nombre.toUpperCase();
     document.getElementById("partidasPerfil").textContent = perfil.partidas || 0;
     document.getElementById("victoriasPerfil").textContent = perfil.victorias || 0;
@@ -17,12 +20,14 @@ if (!perfil) {
     const historial = Array.isArray(perfil.historial) ? perfil.historial : [];
 
     if (!historial.length) {
+        // Mensaje para historial vacío.
         lista.innerHTML = `
             <div class="historial-vacio">
                 Aún no hay partidas registradas.
             </div>
         `;
     } else {
+        // Crea tarjetas del historial.
         historial.forEach((partida) => {
             const item = document.createElement("article");
             item.className = `item-historial ${partida.resultado}`;
@@ -41,6 +46,7 @@ if (!perfil) {
             lista.appendChild(item);
         });
     }
+        // Botón para volver al origen.
         const btnCerrarPanelSistema =
             document.getElementById("btnCerrarPanelSistema");
 
