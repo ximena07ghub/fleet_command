@@ -20,7 +20,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: clamp(12px, 2vw, 26px);
-    background: url("../assets/img/puente-barco.jpg") center center / cover no-repeat;
+    background: url("../assets/img/fondo-dashboard.jpeg") center center / cover no-repeat;
     isolation: isolate;
 }
 

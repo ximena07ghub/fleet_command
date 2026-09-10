@@ -67,23 +67,18 @@ function actualizarEstado() {
         `${rivalNombre[configuracion.rival]} · ${modoNombre[configuracion.modo]} · ${mapaNombre[configuracion.mapa]} · ${dificultadNombre[configuracion.dificultad]}`;
 }
 
-// Guarda partida elegida.
+// Guarda y abre demo de partida.
 btnIniciar.addEventListener("click", () => {
     localStorage.setItem("fleetCommandConfig", JSON.stringify(configuracion));
 
-    const textoOriginal = btnIniciar.innerHTML;
-    btnIniciar.innerHTML = "✓ CONFIGURACIÓN GUARDADA";
+    btnIniciar.innerHTML = "INICIAR PARTIDA";
+    btnIniciar.disabled = true;
 
-    FleetApp.mostrarToast("Configuración lista. Aquí conectaremos el tablero de juego.");
+    FleetApp.mostrarToast("Cargando ejercicio de iluminación.");
 
     setTimeout(() => {
-        btnIniciar.innerHTML = textoOriginal;
+        FleetApp.irConLoading("ejercicio/ejercicio.html");
     }, 1300);
-
-    /*
-        MÁS ADELANTE:
-        FleetApp.irConLoading("juego.html", "Desplegando flota...");
-    */
 });
 
 
