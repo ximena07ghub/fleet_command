@@ -250,7 +250,7 @@ input:focus-visible {
     overflow: auto;
     background:
         linear-gradient(180deg, rgba(0, 7, 17, .62), rgba(0, 7, 17, .9)),
-        url("../assets/img/puente-barco.jpg") center/cover fixed no-repeat;
+        url("../assets/img/fondo-dashboard.jpeg") center/cover fixed no-repeat;
 }
 
 .pagina-sistema::before {
