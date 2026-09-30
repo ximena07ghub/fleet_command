@@ -1,16 +1,18 @@
-// Funciones compartidas del sistema.
-
+// Utilidades compartidas de Fleet Command.
 (function () {
     "use strict";
 
-    // Claves usadas en almacenamiento local.
     const CLAVES = {
         ajustes: "fleetAjustes",
-        usuarios: "fleetUsuarios",
         sesion: "fleetSesion"
     };
 
-    // Preferencias iniciales de audio.
+    try {
+        localStorage.removeItem("fleetUsuarios");
+    } catch (_error) {
+        // Limpieza de datos locales antiguos del primer avance.
+    }
+
     const AJUSTES_DEFECTO = {
         musica: true,
         efectos: true,
@@ -22,22 +24,19 @@
     let musica = null;
     let temporizadorMusica = null;
 
-    // Lee datos guardados con respaldo.
     function leerJSON(clave, respaldo) {
         try {
             const valor = localStorage.getItem(clave);
             return valor ? JSON.parse(valor) : respaldo;
-        } catch (error) {
+        } catch (_error) {
             return respaldo;
         }
     }
 
-    // Guarda datos como JSON local.
     function guardarJSON(clave, valor) {
         localStorage.setItem(clave, JSON.stringify(valor));
     }
 
-    // Mezcla ajustes guardados y defecto.
     function obtenerAjustes() {
         return {
             ...AJUSTES_DEFECTO,
@@ -45,7 +44,6 @@
         };
     }
 
-    // Actualiza ajustes y volumen activo.
     function guardarAjustes(nuevos) {
         const ajustes = {
             ...obtenerAjustes(),
@@ -57,7 +55,6 @@
         return ajustes;
     }
 
-    // Genera sonido alternativo de click.
     function crearBeep() {
         const ajustes = obtenerAjustes();
         if (!ajustes.efectos) return;
@@ -80,12 +77,12 @@
             ganancia.connect(contextoAudio.destination);
             oscilador.start(ahora);
             oscilador.stop(ahora + 0.08);
-        } catch (error) {
+        } catch (_error) {
+            // El navegador puede bloquear Web Audio antes de una interacción.
         }
     }
 
-    // Reproduce el efecto local de click.
-    function reproducirClickLocal() {
+    function sonidoClick() {
         const ajustes = obtenerAjustes();
         if (!ajustes.efectos) return;
 
@@ -95,26 +92,18 @@
         audio.play().catch(() => crearBeep());
     }
 
-    function sonidoClick() {
-        reproducirClickLocal();
-    }
-
-    // Activa sonidos en botones y enlaces.
     function instalarSonidosUI() {
         document.addEventListener("click", (evento) => {
-            if (evento.target.closest("button, a, [data-sonido-ui]")) {
-                sonidoClick();
-            }
+            if (evento.target.closest("button, a, [data-sonido-ui]")) sonidoClick();
         });
     }
 
-    // Ajusta música según página actual.
     function aplicarVolumenMusica() {
         if (!musica) return;
 
         const ajustes = obtenerAjustes();
         const pagina = document.body.dataset.page || "otra";
-        const multiplicadorPagina = pagina === "index" ? 1 : 0.42;
+        const multiplicadorPagina = pagina === "index" ? 1 : pagina === "juego" ? 0.32 : 0.42;
 
         musica.volume = ajustes.musica
             ? Math.min(1, ajustes.volumenMusica * multiplicadorPagina)
@@ -123,10 +112,9 @@
         if (!ajustes.musica) musica.pause();
     }
 
-    // Inicia música en pantallas principales.
     function iniciarMusica() {
         const pagina = document.body.dataset.page || "otra";
-        if (pagina !== "index" && pagina !== "dashboard") return;
+        if (!["index", "dashboard", "juego"].includes(pagina)) return;
 
         const ajustes = obtenerAjustes();
         if (!ajustes.musica) return;
@@ -142,19 +130,19 @@
                     musica.currentTime = 458;
                 }
             });
-
-            musica.addEventListener("error", () => {
-            }, { once: true });
         }
 
         aplicarVolumenMusica();
 
         if (musica.currentTime < 458 || musica.currentTime >= 636) {
-            try { musica.currentTime = 458; } catch (error) {}
+            try {
+                musica.currentTime = 458;
+            } catch (_error) {
+                // Se reintenta después de que el audio cargue.
+            }
         }
 
-        musica.play().catch(() => {
-        });
+        musica.play().catch(() => {});
 
         if (!temporizadorMusica) {
             temporizadorMusica = window.setInterval(() => {
@@ -163,11 +151,10 @@
                     musica.currentTime = 458;
                     musica.play().catch(() => {});
                 }
-            }, 200);
+            }, 250);
         }
     }
 
-    // Desbloquea música tras interacción.
     function instalarInicioMusica() {
         iniciarMusica();
 
@@ -181,7 +168,6 @@
         document.addEventListener("keydown", activar);
     }
 
-    // Alterna modo de pantalla completa.
     async function alternarPantallaCompleta() {
         try {
             if (!document.fullscreenElement) {
@@ -189,40 +175,19 @@
             } else {
                 await document.exitFullscreen();
             }
-        } catch (error) {
-            mostrarToast("El navegador bloqueó la pantalla completa. Usa el botón de Ajustes o F11.");
+        } catch (_error) {
+            mostrarToast("El navegador bloqueó la pantalla completa. También puedes usar F11.");
         }
     }
 
-    // Usa Escape para pantalla completa.
-    function instalarEscapeFullscreen() {
-        document.addEventListener("keydown", (evento) => {
-            if (evento.key !== "Escape") return;
-
-            const modal = document.querySelector(".modal-overlay.abierto");
-            if (modal) return;
-
-            if (!document.fullscreenElement) {
-                alternarPantallaCompleta();
-            }
-        });
-    }
-
-    // Recupera perfiles locales.
-    function obtenerUsuarios() {
-        return leerJSON(CLAVES.usuarios, {});
-    }
-
-    // Consulta la sesión actual.
     function usuarioActual() {
         try {
             return sessionStorage.getItem(CLAVES.sesion) || "";
-        } catch (error) {
+        } catch (_error) {
             return "";
         }
     }
 
-    // Valida o crea usuario local.
     function iniciarSesion(usuario, password) {
         const nombre = String(usuario || "").trim();
         const clave = String(password || "");
@@ -235,86 +200,31 @@
             return { ok: false, mensaje: "La contraseña debe tener al menos 4 caracteres." };
         }
 
-        const usuarios = obtenerUsuarios();
-        const id = nombre.toLowerCase();
-
-        if (usuarios[id] && usuarios[id].password !== clave) {
-            return { ok: false, mensaje: "La contraseña no coincide con este usuario." };
-        }
-
-        const esNuevo = !usuarios[id];
-
-        if (esNuevo) {
-            usuarios[id] = {
-                nombre,
-                password: clave,
-                victorias: 0,
-                derrotas: 0,
-                partidas: 0,
-                historial: [],
-                creado: new Date().toISOString()
-            };
-            guardarJSON(CLAVES.usuarios, usuarios);
-        }
-
-        sessionStorage.setItem(CLAVES.sesion, id);
-        return { ok: true, usuario: usuarios[id], nuevo: esNuevo };
+        sessionStorage.setItem(CLAVES.sesion, nombre);
+        return { ok: true, usuario: { nombre }, nuevo: false };
     }
 
-    // Limpia la sesión activa.
     function cerrarSesion() {
         sessionStorage.removeItem(CLAVES.sesion);
     }
 
-    // Devuelve el perfil conectado.
     function obtenerPerfil() {
-        const id = usuarioActual();
-        if (!id) return null;
-        const usuarios = obtenerUsuarios();
-        return usuarios[id] || null;
+        const nombre = usuarioActual();
+        return nombre ? { nombre } : null;
     }
 
-    // Registra resultado de partida.
-    function registrarResultado(resultado, detalle) {
-        const id = usuarioActual();
-        if (!id) return false;
-
-        const usuarios = obtenerUsuarios();
-        const perfil = usuarios[id];
-        if (!perfil) return false;
-
-        const normalizado = resultado === "victoria" ? "victoria" : "derrota";
-        perfil.partidas = (perfil.partidas || 0) + 1;
-
-        if (normalizado === "victoria") {
-            perfil.victorias = (perfil.victorias || 0) + 1;
-        } else {
-            perfil.derrotas = (perfil.derrotas || 0) + 1;
-        }
-
-        perfil.historial = Array.isArray(perfil.historial) ? perfil.historial : [];
-        perfil.historial.unshift({
-            resultado: normalizado,
-            detalle: detalle || "Partida Fleet Command",
-            fecha: new Date().toISOString()
-        });
-        perfil.historial = perfil.historial.slice(0, 20);
-
-        guardarJSON(CLAVES.usuarios, usuarios);
-        return true;
+    function registrarResultado() {
+        console.warn("Los puntajes oficiales deben registrarse mediante el Web Service y MySQL.");
+        return false;
     }
 
-    // Redirige usando pantalla de carga.
     function irConLoading(destino, mensaje) {
         sessionStorage.setItem("fleetDestino", destino);
         sessionStorage.setItem("fleetMensajeCarga", mensaje || "Preparando sistema...");
         window.location.href = "loading.html";
     }
 
-    
-
-    // Muestra mensajes breves en pantalla.
-    function mostrarToast(mensaje, duracion) {
+    function mostrarToast(mensaje, duracion = 2200) {
         let toast = document.getElementById("fleetToast");
 
         if (!toast) {
@@ -330,10 +240,9 @@
         window.clearTimeout(toast._timer);
         toast._timer = window.setTimeout(() => {
             toast.classList.remove("visible");
-        }, duracion || 2200);
+        }, duracion);
     }
 
-    // API global para otras ventanas.
     window.FleetApp = {
         obtenerAjustes,
         guardarAjustes,
@@ -351,7 +260,6 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         instalarSonidosUI();
-        instalarEscapeFullscreen();
         instalarInicioMusica();
     });
 })();

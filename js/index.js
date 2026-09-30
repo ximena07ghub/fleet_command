@@ -25,12 +25,12 @@ function actualizarSesionVisual() {
     const perfil = FleetApp.obtenerPerfil();
 
     if (perfil) {
-        estadoSesion.classList.add("con-sesion");
-        textoSesion.textContent = `SESIÓN // ${perfil.nombre.toUpperCase()}`;
+        if (estadoSesion) estadoSesion.classList.add("con-sesion");
+        if (textoSesion) textoSesion.textContent = `SESIÓN // ${perfil.nombre.toUpperCase()}`;
         if (perfilPanel) perfilPanel.textContent = perfil.nombre.toUpperCase();
     } else {
-        estadoSesion.classList.remove("con-sesion");
-        textoSesion.textContent = "SIN SESIÓN";
+        if (estadoSesion) estadoSesion.classList.remove("con-sesion");
+        if (textoSesion) textoSesion.textContent = "SIN SESIÓN";
         if (perfilPanel) perfilPanel.textContent = "NO IDENTIFICADO";
     }
 
@@ -61,7 +61,7 @@ function seleccionarOpcion(boton) {
 
     const textosBoton = {
         nave: "INICIAR SESIÓN",
-
+        puntuaciones: "VER TABLA",
         reglas: "ABRIR REGLAS",
         ajustes: "ABRIR AJUSTES",
         salir: "DESCONECTAR"
@@ -110,6 +110,10 @@ function ejecutarAccion(accion) {
             usuarioInput.focus();
             break;
         }
+
+        case "puntuaciones":
+            window.location.href = "puntuaciones.html?from=index";
+            break;
 
         case "reglas":
             window.location.href = "reglas.html?from=index";

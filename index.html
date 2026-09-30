@@ -27,13 +27,15 @@
             <div class="contenido-menu">
                 <!-- Opciones principales -->
                 <nav class="menu-principal" aria-label="Opciones principales">
-                    <button class="opcion-menu seleccionada" data-accion="nave" data-titulo="BIENVENIDO" data-descripcion="Identifícate para conservar tu perfil, victorias, derrotas e historial de partidas.">
+                    <button class="opcion-menu seleccionada" data-accion="nave" data-titulo="BIENVENIDO" data-descripcion="Identifícate para entrar al puente de mando y usar tu nombre de jugador durante la sesión.">
                         <span class="numero">01</span>
                         <span class="texto-opcion">INICIAR</span>
                         <span class="icono-opcion">▶</span>
                     </button>
 
-
+                    <button class="opcion-menu" data-accion="puntuaciones" data-titulo="PUNTUACIONES" data-descripcion="Consulta la tabla de puntuaciones preparada para el Web Service y MySQL.">
+                        <span class="numero">02</span>
+                        <span class="texto-opcion">PUNTUACIONES</span>
                     </button>
 
                     <button class="opcion-menu" data-accion="reglas" data-titulo="REGLAS" data-descripcion="Consulta la misión, los turnos y las reglas básicas antes de entrar en combate.">
@@ -46,7 +48,7 @@
                         <span class="texto-opcion">AJUSTES</span>
                     </button>
 
-                    <button class="opcion-menu opcion-salir" data-accion="salir" data-titulo="SALIR" data-descripcion="Desconecta la interfaz de Fleet Command. El navegador puede pedirte cerrar la pestaña manualmente.">
+                    <button class="opcion-menu opcion-salir" data-accion="salir" data-titulo="SALIR" data-descripcion="Desconecta la interfaz de Fleet Command. Permite cerrar la pestaña de forma segura.">
                         <span class="numero">05</span>
                         <span class="texto-opcion">SALIR</span>
                         <span class="icono-opcion">↪</span>
@@ -61,7 +63,10 @@
                         Accede al puente de mando y configura el tipo de partida, mapa y dificultad.
                     </p>
 
-           
+                    <div class="estado-panel" id="estadoSesion">
+                        <span id="textoSesion">SIN SESIÓN</span>
+                        <span id="estadoAudioPie">AUDIO // CONFIGURADO</span>
+                    </div>
 
                     <button class="boton-principal" id="btnAccionPrincipal">
                         <span class="texto-accion" id="textoAccionPrincipal">ENTRAR</span>

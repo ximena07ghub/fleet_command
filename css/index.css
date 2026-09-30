@@ -596,3 +596,17 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+.estado-panel {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 14px 0 4px;
+    color: #7fa8b0;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.estado-panel.con-sesion #textoSesion {
+    color: #69ffd7;
+}

@@ -1,68 +1,86 @@
-# Resumen del proyecto Fleet Command
+# Resumen actual de Fleet Command
 
-## Funcion general
+Fleet Command es un videojuego web 3D de estrategia naval construido con HTML, CSS, JavaScript, WebGL y Three.js. El proyecto ya conserva las pantallas del primer avance y ahora agrega la infraestructura del segundo avance: servidor Node.js, Express, Socket.IO, escena 3D real, barcos provisionales animados, colisiones, HUD y salas para dos jugadores.
 
-Fleet Command es una interfaz web para un videojuego de estrategia naval. El avance actual se enfoca en pantallas, navegacion, configuracion de partida, perfil local, reglas, ajustes de audio y una pantalla de carga entre secciones.
+## Flujo principal
 
-La estructura esta hecha con HTML, CSS y JavaScript separados por ventana. Esto ayuda a explicar el proyecto por partes: cada pantalla tiene su archivo visual, su hoja de estilos y, cuando lo necesita, su archivo de comportamiento.
+```text
+index.html
+→ dashboard.html
+→ loading.html
+→ juego.html
+```
 
-## Ventanas actuales
+El dashboard guarda solamente configuración temporal permitida: rival, modo, mapa y dificultad. `juego.html` interpreta esos valores y construye la escena.
 
-- `index.html`: muestra el menu inicial, permite iniciar sesion, abrir reglas, abrir ajustes y salir del sistema.
-- `dashboard.html`: funciona como pantalla principal de configuracion de partida. Permite elegir rival, modo, mapa y dificultad.
-- `loading.html`: muestra una barra de progreso simulada antes de enviar al usuario a otra pantalla.
-- `juego.html`: abre una demostracion WebGL con iluminacion ambiental y luz focal.
-- `ajustes.html`: permite activar o desactivar musica, efectos y modificar volumenes.
-- `perfil.html`: muestra nombre, partidas, victorias, derrotas, efectividad e historial local.
-- `reglas.html`: organiza reglas, modos, dificultad e items en pestanas.
-- `pause.html`: presenta un menu de pausa visual con opciones de continuar, reiniciar, ajustes y salir.
+## Juego 3D
 
-## Navegacion
+La partida utiliza Three.js instalado con npm y servido por `server.js`. La escena contiene:
 
-El flujo principal inicia en `index.html`. Si el usuario intenta entrar al dashboard sin sesion, aparece el modal de login. Al iniciar sesion correctamente, se usa `loading.html` para mostrar una transicion antes de llegar a `dashboard.html`.
+- `WebGLRenderer`;
+- cámara perspectiva;
+- `setAnimationLoop`;
+- mar y tablero 3D;
+- `AmbientLight`;
+- `DirectionalLight`;
+- `PointLight`;
+- materiales `MeshPhongMaterial`;
+- animación de balanceo;
+- `Raycaster` para selección;
+- colisiones por cajas `Box3`;
+- límites del tablero.
 
-Desde el dashboard se puede abrir reglas, perfil y ajustes. Tambien se puede presionar `INICIAR PARTIDA` para guardar la configuracion y abrir la demo de iluminacion usando la pantalla de carga. Las pantallas secundarias usan el parametro `from` para saber si deben volver al dashboard o al inicio.
+Los barcos actuales son placeholders y se reemplazarán por OBJ/FBX cuando se reciban los modelos finales.
 
-La pantalla de carga usa `sessionStorage` para recordar a que destino debe redirigir. El perfil, los ajustes y las estadisticas usan almacenamiento del navegador para conservar informacion durante el uso local del proyecto.
+## Multijugador
 
-## Tecnologias usadas
+`server.js` ejecuta Express y Socket.IO en el puerto 3000. Cada sala admite dos jugadores y replica:
 
-- HTML: estructura de cada ventana y formularios.
-- CSS: estilos visuales, fondos, paneles, botones, responsive y efectos HUD.
-- JavaScript: interacciones, modales, seleccion de opciones, audio, sesion y navegacion.
-- WebGL: escena sencilla con objetos 3D, shader de color e iluminacion.
-- LocalStorage: guarda usuarios, ajustes y configuracion local.
-- SessionStorage: mantiene sesion activa y destino temporal de carga.
-- Audio local y Web Audio API: reproduce musica, clicks y sonido alternativo.
+- posición del barco;
+- rotación;
+- flota inicial;
+- selección de casilla;
+- estado de pausa del rival.
 
+La demostración está preparada para Chrome normal + Chrome incógnito.
 
-## Avance para el primer parcial
+## Interfaz
 
-Para el primer parcial, el proyecto va bien encaminado porque ya cuenta con varias pantallas visuales completas: menu inicial, ajustes, perfil, reglas, pantalla de carga, dashboard y pausa. Tambien hay estilos CSS propios, imagenes, logo, fondos, botones, modales, sonidos y una navegacion general entre secciones.
+Bootstrap se utiliza como apoyo para el HUD y los modales dentro de la partida. Los estilos originales de Fleet Command continúan en CSS propio.
 
-La rubrica del primer avance pide principalmente estilos, colores, imagenes y pantallas como menu inicial, configuraciones, puntuaciones, pausa y pantalla donde estara el juego. El proyecto ya cubre buena parte de eso con una identidad visual consistente, varias ventanas navegables y una demo WebGL enlazada desde iniciar partida.
+El menú de pausa real ya no navega a otra página: se abre encima del canvas y mantiene viva la conexión de Socket.IO.
 
-Tambien existe almacenamiento local para usuarios, sesion, ajustes y estadisticas. Esto ayuda a explicar que el proyecto ya tiene una base funcional, no solo pantallas decorativas.
+## Sonido
 
-## Observaciones sin corregir
+Se conserva la música y el sistema de efectos por JavaScript del primer avance. La música también puede reproducirse dentro de la partida respetando los ajustes locales.
 
-- `index.js` busca elementos como `estadoSesion` y `textoSesion`, pero no aparecen en `index.html`. Esto puede generar error si se ejecuta esa funcion sin validar esos elementos.
-- En `index.html` hay un cierre extra de `</button>` dentro del menu principal. No se corrigio en esta pasada porque se pidio solo reportar fallas.
-- La pantalla `juego.html` es una demo temporal de iluminacion, no la partida final.
-- `pause.html` funciona visualmente, pero sus botones solo muestran la accion en consola.
-- Algunas estructuras HTML pueden acomodarse mejor para que el codigo sea mas facil de mantener.
+## Persistencia
 
-## Mejoras recomendadas
+`localStorage` se usa únicamente para preferencias y configuración temporal. El código ya no registra victorias, derrotas ni puntajes oficiales en almacenamiento local.
 
-- Reemplazar la demo `juego.html` por la partida real cuando avance el proyecto.
-- Agregar una seccion visible de puntuaciones si el profesor la revisa como pantalla separada.
-- Hacer que el menu de pausa ejecute acciones reales cuando exista la partida.
-- Revisar el inicio para que todos los elementos usados por JavaScript existan en HTML.
-- Unificar nombres visibles y rutas para que la navegacion sea mas facil de explicar.
-- Probar cada pantalla en Chrome antes de entregar para detectar errores de consola.
+Se incluye una preparación de PHP + MySQL para el tercer avance:
 
-## Como explicar el avance
+```text
+backend-xampp/fleet_command_api/
+database/fleet_command.sql
+puntuaciones.html
+```
 
-Una forma sencilla de presentarlo es decir que el proyecto ya tiene la interfaz principal del videojuego y el flujo de navegacion entre pantallas. El usuario puede iniciar sesion, configurar audio, revisar reglas, ver su perfil, elegir modo, mapa y dificultad, y abrir una demostracion de iluminacion desde iniciar partida.
+La tabla de puntuaciones consulta datos por `fetch` cuando la API de XAMPP está activa.
 
-Tambien puedes explicar que el codigo esta dividido por responsabilidades: HTML para estructura, CSS para el estilo visual y JavaScript para interactividad, almacenamiento local y navegacion. Esa separacion permite seguir construyendo el juego sin mezclar todo en un solo archivo.
+## Escenarios, dificultad y modos
+
+La arquitectura ya lee:
+
+- Playa, Tormenta y Ártico;
+- Normal y Difícil;
+- Clásico y Ráfaga;
+- Online y Contra IA.
+
+En esta versión los escenarios ya modifican el ambiente visual y las dificultades cambian tamaño de tablero/cantidad de barcos. Las reglas completas de Clásico/Ráfaga se desarrollarán sobre esta misma estructura.
+
+## Próximo paso principal
+
+Cuando estén disponibles los modelos finales, integrar los OBJ/FBX y texturas mediante `js/juego/modelos.js`, ajustar escala/orientación y conectar sus clips FBX al `AnimationMixer`.
+
+Después se puede continuar con disparos, impactos, condiciones de victoria/derrota, power-ups, partículas, IA final y registro de puntajes en MySQL.
