@@ -33,7 +33,7 @@
                         <span class="icono-opcion">▶</span>
                     </button>
 
-                    <button class="opcion-menu" data-accion="puntuaciones" data-titulo="PUNTUACIONES" data-descripcion="Consulta la tabla de puntuaciones preparada para el Web Service y MySQL.">
+                    <button class="opcion-menu" data-accion="puntuaciones" data-titulo="PUNTUACIONES" data-descripcion="Consulta la clasificación registrada por el Web Service y MySQL.">
                         <span class="numero">02</span>
                         <span class="texto-opcion">PUNTUACIONES</span>
                     </button>
@@ -105,7 +105,20 @@
                     <button class="hud-btn" type="button" data-cerrar-modal="modalLogin">CANCELAR</button>
                     <button class="hud-btn" type="submit">ENTRAR</button>
                 </div>
+                
             </form>
+            <div style="margin-top: 18px; text-align: center;">
+
+                <p style="margin-bottom: 10px;">
+                    O INICIA CON FACEBOOK
+                </p>
+            
+                <fb:login-button
+                    scope="public_profile,email"
+                    onlogin="checkLoginState();">
+                </fb:login-button>
+            
+            </div>
         </section>
     </div>
 
@@ -131,8 +144,10 @@
         <button class="hud-btn" id="volverSistema">VOLVER AL SISTEMA</button>
     </div>
 
-    <!-- Logica compartida y menu -->
+    <!-- Logica compartida, Facebook y menu -->
     <script src="js/common.js"></script>
+    <script src="js/facebook.js"></script>
     <script src="js/index.js"></script>
+
 </body>
 </html>

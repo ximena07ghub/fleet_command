@@ -1,11 +1,9 @@
-# Modelos finales pendientes
+# Modelos 3D de Fleet Command
 
-La segunda entrega funciona con barcos provisionales creados con geometrías de Three.js.
+Los modelos que usa actualmente la partida estan en `public/models/fleet/`, porque `server.js` publica la carpeta `/public` para los cargadores de Three.js.
 
-Cuando recibas los modelos finales, coloca aquí:
+- `yamato.fbx`: modelo estandar de la flota.
+- `enemigo_dificil.fbx`: modelo especial usado por la IA en dificultad dificil.
+- `public/models/submarine.obj` + `.mtl`: se conservan como referencia del ejercicio OBJ/MTL visto en clase.
 
-- `.fbx` o `.obj`
-- texturas utilizadas por cada modelo
-- `.mtl` si el OBJ lo requiere
-
-Después se actualizará `js/juego/modelos.js` / `js/juego/barcos.js` para sustituir el placeholder. La lógica de selección, movimiento, colisiones y Socket.IO no necesita rehacerse.
+La carga se controla desde `js/juego/modelos.js`.

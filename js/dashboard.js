@@ -8,7 +8,7 @@ if (!perfilActual) {
 
 if (perfilActual) {
     document.getElementById("nombreUsuarioDashboard").textContent = perfilActual.nombre;
-    document.getElementById("nivelUsuarioDashboard").textContent = "Sesión local";
+    document.getElementById("nivelUsuarioDashboard").textContent = perfilActual.proveedor === "facebook" ? "Sesión con Facebook" : "Sesión local";
 }
 
 const CONFIG_DEFECTO = {

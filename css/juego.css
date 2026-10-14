@@ -185,3 +185,10 @@ body[data-page="juego"] {
     .badge-fleet { font-size: .58rem; }
     .control-chip { font-size: .58rem; }
 }
+
+.resultado-puntos {
+    color: #69ffd7;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    font-weight: 800;
+    letter-spacing: .08em;
+}

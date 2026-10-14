@@ -206,6 +206,18 @@ formLogin.addEventListener("submit", (evento) => {
     }, 850);
 });
 
+// Facebook usa el mismo flujo visual después de obtener el perfil externo.
+document.addEventListener("fleet:sesion-iniciada", (evento) => {
+    const usuario = evento.detail;
+    cerrarModal(modalLogin);
+    actualizarSesionVisual();
+    FleetApp.mostrarToast(`Sesión de Facebook iniciada: ${usuario.nombre}`);
+
+    window.setTimeout(() => {
+        FleetApp.irConLoading("dashboard.html", "Conectando perfil de Facebook con Fleet Command...");
+    }, 700);
+});
+
 // Muestra salida si no cierra pestaña.
 document.getElementById("confirmarSalir").addEventListener("click", () => {
     cerrarModal(document.getElementById("modalSalir"));

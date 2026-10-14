@@ -17,11 +17,11 @@
 
             <section class="panel-sistema panel-puntuaciones">
                 <button class="cerrar-panel-sistema" id="btnCerrarPuntuaciones" type="button" aria-label="Cerrar puntuaciones">×</button>
-                <p class="kicker">REGISTRO // MYSQL</p>
+                <p class="kicker">PANEL DE CLASIFICACION</p>
                 <h1>CLASIFICACIÓN</h1>
-                <p class="intro">Los récords de esta tabla se consultan mediante el Web Service. No se guardan en localStorage.</p>
+                <p class="intro">Los récords de  tabla apareceran cuando haya partidas ganadas c:</p>
 
-                <div class="estado-api" id="estadoApi">Comprobando Web Service...</div>
+                <div class="estado-api" id="estadoApi">Comprobando conexion...</div>
 
                 <div class="tabla-puntuaciones-wrap">
                     <table class="tabla-puntuaciones">
@@ -41,13 +41,14 @@
                 </div>
 
                 <div class="acciones-puntuaciones">
-                    <button class="hud-btn" id="btnReintentarPuntuaciones" type="button">REINTENTAR CONEXIÓN</button>
+                    <button class="hud-btn" id="btnReintentarPuntuaciones" type="button">ACTUALIZAR PUNTUACIONES</button>
                 </div>
             </section>
         </div>
     </main>
 
     <script src="js/common.js"></script>
+    <script src="js/webservice.js"></script>
     <script src="js/puntuaciones.js"></script>
 </body>
 </html>

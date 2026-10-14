@@ -1,4 +1,3 @@
-const API_BASE = localStorage.getItem("fleetApiBaseUrl") || "http://localhost/fleet_command_api";
 const estadoApi = document.getElementById("estadoApi");
 const cuerpo = document.getElementById("cuerpoPuntuaciones");
 
@@ -8,17 +7,14 @@ function escaparTexto(valor) {
 
 async function cargarPuntuaciones() {
     estadoApi.className = "estado-api";
-    estadoApi.textContent = `Consultando ${API_BASE}...`;
+    estadoApi.textContent = `Consultando ${FleetAPI.API_BASE}...`;
 
     try {
-        const respuesta = await fetch(`${API_BASE}/obtener_puntajes.php`, { cache: "no-store" });
-        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
-        const datos = await respuesta.json();
-        if (!datos.ok || !Array.isArray(datos.puntuaciones)) throw new Error(datos.mensaje || "Respuesta no válida");
-
+        const datos = await FleetAPI.obtenerPuntuaciones();
         cuerpo.innerHTML = "";
+
         if (!datos.puntuaciones.length) {
-            cuerpo.innerHTML = '<tr><td colspan="5">La base de datos está conectada, pero aún no hay partidas registradas.</td></tr>';
+            cuerpo.innerHTML = '<tr><td colspan="5"> Aún no hay partidas registradas para este jugador.</td></tr>';
         } else {
             datos.puntuaciones.forEach((fila, indice) => {
                 const tr = document.createElement("tr");
@@ -38,11 +34,12 @@ async function cargarPuntuaciones() {
         }
 
         estadoApi.classList.add("ok");
-        estadoApi.textContent = "Web Service conectado // puntuaciones obtenidas desde MySQL.";
-    } catch (_error) {
+        estadoApi.textContent = "Conexion exitosa.";
+    } catch (error) {
+        console.error(error);
         estadoApi.classList.add("error");
-        estadoApi.textContent = "Web Service todavía no está activo. Sigue INSTRUCCIONES_INSTALACION.md para configurar XAMPP/MySQL.";
-        cuerpo.innerHTML = '<tr><td colspan="5">Sin conexión con la base de datos.</td></tr>';
+        estadoApi.textContent = "Error de conexion.";
+        cuerpo.innerHTML = '<tr><td colspan="5">Sin conexión.</td></tr>';
     }
 }
 

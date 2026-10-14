@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const AMBIENTES = {
     playa: {
@@ -85,10 +86,11 @@ export function crearEscena({ mapa, tamanoTablero, cellSize = 1.65, contenedor }
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Limitar el pixel ratio evita renderizar demasiados pixeles en laptops con pantalla de alta densidad.
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // Los modelos FBX son pesados; para este avance se prioriza fluidez sobre sombras dinámicas.
+    renderer.shadowMap.enabled = false;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     contenedor.appendChild(renderer.domElement);
 
@@ -125,8 +127,7 @@ export function crearEscena({ mapa, tamanoTablero, cellSize = 1.65, contenedor }
 
     const direccional = new THREE.DirectionalLight(ambiente.direccional, ambiente.intensidadDireccional);
     direccional.position.set(boardSize * 0.45, boardSize * 0.9, boardSize * 0.38);
-    direccional.castShadow = true;
-    direccional.shadow.mapSize.set(1024, 1024);
+    direccional.castShadow = false;
     scene.add(direccional);
 
     const punto = new THREE.PointLight(ambiente.punto, mapa === "tormenta" ? 3.2 : 1.8, boardSize * 1.6, 2);
@@ -143,6 +144,21 @@ export function crearEscena({ mapa, tamanoTablero, cellSize = 1.65, contenedor }
     marcador.position.y = 0.08;
     marcador.visible = false;
     scene.add(marcador);
+
+
+    // OrbitControls permite observar el tablero alrededor con arrastre del mouse
+    // y acercar o alejar con la rueda. No permite mover el centro del tablero.
+    const controlesCamara = new OrbitControls(camera, renderer.domElement);
+    controlesCamara.target.set(0, 0, 0);
+    controlesCamara.enablePan = false;
+    controlesCamara.enableDamping = false;
+    controlesCamara.minDistance = boardSize * 0.72;
+    controlesCamara.maxDistance = boardSize * 1.7;
+    controlesCamara.minPolarAngle = 0.35;
+    controlesCamara.maxPolarAngle = Math.PI / 2.08;
+    controlesCamara.zoomSpeed = 0.85;
+    controlesCamara.rotateSpeed = 0.65;
+    controlesCamara.update();
 
     function redimensionar() {
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -163,8 +179,10 @@ export function crearEscena({ mapa, tamanoTablero, cellSize = 1.65, contenedor }
         boardSize,
         boardHalf,
         cellSize,
+        controlesCamara,
         dispose() {
             window.removeEventListener("resize", redimensionar);
+            controlesCamara.dispose();
             renderer.dispose();
         }
     };

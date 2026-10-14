@@ -2,13 +2,11 @@ import * as THREE from "three";
 import { crearEscena } from "./escena.js";
 import {
     aplicarEstadoBarco,
-    animarFlota,
     crearBarcoProvisional,
     crearFlotaProvisional,
     encontrarBarcoDesdeObjeto,
     marcarSeleccion,
     moverBarcoSeguro,
-    rotarBarcoSeguro,
     serializarBarco,
     serializarFlota
 } from "./barcos.js";
@@ -19,6 +17,7 @@ import {
     obtenerTamanoTablero
 } from "./configuracion.js";
 import { crearClienteRed } from "./red.js";
+import { cargarModeloFBX, clonarModeloBarco } from "./modelos.js";
 
 const perfil = window.FleetApp?.obtenerPerfil();
 if (!perfil) {
@@ -37,6 +36,38 @@ const mundo = crearEscena({
     contenedor
 });
 
+// En modo IA la opcion de sala no aplica, por eso se oculta desde el inicio.
+if (configuracion.rival === "ia") {
+    document.getElementById("btnSala")?.setAttribute("hidden", "");
+    const estadoSalaInicial = document.getElementById("estadoSala");
+    if (estadoSalaInicial) estadoSalaInicial.textContent = "RIVAL // IA";
+}
+
+let modeloEstandar = null;
+let modeloEnemigoDificil = null;
+
+try {
+    modeloEstandar = await cargarModeloFBX(
+        "/public/models/fleet/yamato.fbx",
+        "Yamato",
+        2.35
+    );
+} catch (error) {
+    console.warn("Yamato no pudo cargarse. Se usara el barco provisional.", error);
+}
+
+if (configuracion.rival === "ia" && configuracion.dificultad === "dificil") {
+    try {
+        modeloEnemigoDificil = await cargarModeloFBX(
+            "/public/models/fleet/enemigo_dificil.fbx",
+            "Enemigo dificil",
+            2.35
+        );
+    } catch (error) {
+        console.warn("El modelo especial no pudo cargarse. La IA dificil usara Yamato.", error);
+    }
+}
+
 const hudConfiguracion = document.getElementById("hudConfiguracion");
 const estadoConexion = document.getElementById("estadoConexion");
 const estadoSala = document.getElementById("estadoSala");
@@ -51,6 +82,12 @@ const btnPausa = document.getElementById("btnPausa");
 const btnContinuar = document.getElementById("btnContinuar");
 const btnPantallaCompleta = document.getElementById("btnPantallaCompleta");
 const btnVolverDashboard = document.getElementById("btnVolverDashboard");
+const textoResultado = document.getElementById("textoResultado");
+const puntosResultado = document.getElementById("puntosResultado");
+const estadoGuardadoResultado = document.getElementById("estadoGuardadoResultado");
+const btnReintentarGuardado = document.getElementById("btnReintentarGuardado");
+const btnVerPuntuaciones = document.getElementById("btnVerPuntuaciones");
+const btnResultadoDashboard = document.getElementById("btnResultadoDashboard");
 
 hudConfiguracion.textContent = describirConfiguracion(configuracion);
 
@@ -59,6 +96,10 @@ const modalSala = window.bootstrap.Modal.getOrCreateInstance(document.getElement
     keyboard: false
 });
 const modalPausa = window.bootstrap.Modal.getOrCreateInstance(document.getElementById("modalPausa"), {
+    backdrop: "static",
+    keyboard: false
+});
+const modalResultado = window.bootstrap.Modal.getOrCreateInstance(document.getElementById("modalResultado"), {
     backdrop: "static",
     keyboard: false
 });
@@ -73,6 +114,10 @@ let pausado = false;
 let salaConDosJugadores = false;
 let red = null;
 let temporizadorIA = null;
+let ultimoRender = 0;
+let partidaFinalizada = false;
+let ultimoResultado = null;
+let inicioPuntero = null;
 
 function limpiarFlota(flota) {
     flota.forEach((barco) => mundo.scene.remove(barco));
@@ -80,15 +125,51 @@ function limpiarFlota(flota) {
 }
 
 function seleccionarBarco(barco) {
-    if (barcoSeleccionado === barco) return;
+    // Clic sobre el mismo barco: lo deselecciona sin elegir otro.
+    if (barcoSeleccionado === barco && barco) {
+        marcarSeleccion(barcoSeleccionado, false);
+        barcoSeleccionado = null;
+        mundo.marcador.visible = false;
+        mensajeJuego.textContent = "Barco deseleccionado. Selecciona uno cuando quieras moverlo.";
+        return;
+    }
+
     marcarSeleccion(barcoSeleccionado, false);
-    barcoSeleccionado = barco;
+    barcoSeleccionado = barco || null;
     marcarSeleccion(barcoSeleccionado, true);
+    mundo.marcador.visible = false;
 
     if (barcoSeleccionado) {
-        mensajeJuego.textContent = `Seleccionado: ${barcoSeleccionado.userData.barcoId}. Usa WASD, flechas o una casilla.`;
+        mensajeJuego.textContent = `Seleccionado: ${barcoSeleccionado.userData.barcoId}. Usa WASD, flechas o elige una casilla.`;
         window.FleetApp.sonidoClick();
     }
+}
+
+function colocarModeloEnBarco(barco, plantilla) {
+    if (!barco || !plantilla) return;
+
+    const modelo = clonarModeloBarco(plantilla);
+    if (!modelo) return;
+
+    barco.clear();
+    barco.add(modelo);
+
+    const materiales = [];
+    modelo.traverse((objeto) => {
+        if (!objeto.isMesh) return;
+        const lista = Array.isArray(objeto.material) ? objeto.material : [objeto.material];
+        lista.forEach((material) => {
+            if (material && !materiales.includes(material)) materiales.push(material);
+        });
+    });
+
+    barco.userData.materiales = materiales;
+    barco.userData.modelo3D = plantilla.name;
+}
+
+function colocarModeloEnFlota(flota, plantilla) {
+    if (!plantilla) return;
+    flota.forEach((barco) => colocarModeloEnBarco(barco, plantilla));
 }
 
 function prepararFlotaLocal(slot) {
@@ -104,8 +185,10 @@ function prepararFlotaLocal(slot) {
         cellSize: mundo.cellSize
     });
 
-    seleccionarBarco(flotaLocal[0]);
+    colocarModeloEnFlota(flotaLocal, modeloEstandar);
+
     estadoJugador.textContent = `JUGADOR ${slot} // ${perfil.nombre.toUpperCase()}`;
+    mensajeJuego.textContent = "Selecciona un barco. Puedes moverlo con WASD, flechas o clic en una casilla.";
 }
 
 function asegurarBarcoRemoto(estado) {
@@ -119,6 +202,7 @@ function asegurarBarcoRemoto(estado) {
         color
     });
     barco.userData.seleccionable = false;
+    colocarModeloEnBarco(barco, modeloEstandar);
     mundo.scene.add(barco);
     flotaRemota.push(barco);
     return barco;
@@ -179,8 +263,8 @@ function intentarMoverSeleccionado(x, z) {
     );
 
     if (!valido) {
-        mensajeJuego.textContent = "Movimiento bloqueado: evita salir del tablero o atravesar otro barco.";
-        window.FleetApp.mostrarToast("Posición no válida.", 1300);
+        mensajeJuego.textContent = "Movimiento bloqueado: mantén el barco dentro de tu mitad y evita otros barcos.";
+        window.FleetApp.mostrarToast("Esa casilla no está disponible para tu flota.", 1300);
         return false;
     }
 
@@ -213,6 +297,12 @@ function alPulsarCanvas(evento) {
     const impactoTablero = raycaster.intersectObject(mundo.tableroRaycast, false)[0];
     if (!impactoTablero) return;
 
+    if (!barcoSeleccionado) {
+        mundo.marcador.visible = false;
+        mensajeJuego.textContent = "Primero selecciona uno de tus barcos.";
+        return;
+    }
+
     const celda = puntoACelda(impactoTablero.point);
     marcarCasilla(celda);
     red?.enviarCasilla({ columna: celda.columna, fila: celda.fila });
@@ -220,6 +310,8 @@ function alPulsarCanvas(evento) {
 }
 
 function alPulsarTecla(evento) {
+    if (partidaFinalizada) return;
+
     if (evento.key === "Escape") {
         const salaVisible = document.getElementById("modalSala").classList.contains("show");
         if (salaVisible) return;
@@ -241,14 +333,7 @@ function alPulsarTecla(evento) {
     else if (tecla === "s" || evento.key === "ArrowDown") z += paso;
     else if (tecla === "a" || evento.key === "ArrowLeft") x -= paso;
     else if (tecla === "d" || evento.key === "ArrowRight") x += paso;
-    else if (tecla === "q" || tecla === "e") {
-        const giro = tecla === "q" ? Math.PI / 2 : -Math.PI / 2;
-        const valido = rotarBarcoSeguro(barcoSeleccionado, giro, flotaLocal, mundo.boardHalf);
-        if (valido) notificarMovimiento(barcoSeleccionado);
-        else window.FleetApp.mostrarToast("No hay espacio para girar el barco.", 1300);
-        evento.preventDefault();
-        return;
-    } else {
+    else {
         manejada = false;
     }
 
@@ -258,20 +343,35 @@ function alPulsarTecla(evento) {
     }
 }
 
+function registrarInicioPuntero(evento) {
+    if (evento.button !== 0) return;
+    inicioPuntero = { x: evento.clientX, y: evento.clientY };
+}
+
+function procesarFinPuntero(evento) {
+    if (!inicioPuntero || evento.button !== 0) return;
+
+    const distancia = Math.hypot(
+        evento.clientX - inicioPuntero.x,
+        evento.clientY - inicioPuntero.y
+    );
+    inicioPuntero = null;
+
+    // Si hubo arrastre, OrbitControls movió la cámara y no se interpreta como clic.
+    if (distancia > 6) return;
+    alPulsarCanvas(evento);
+}
+
 function renderLoop(tiempoMs) {
-    const tiempo = tiempoMs / 1000;
-    animarFlota(flotaLocal, tiempo);
-    animarFlota(flotaRemota, tiempo);
-
-    mundo.pointLight.intensity = configuracion.mapa === "tormenta"
-        ? 2.4 + Math.max(0, Math.sin(tiempo * 2.8)) * 2.1
-        : 1.6 + Math.sin(tiempo * 1.3) * 0.18;
-
+    // 30 FPS son suficientes porque el movimiento ahora es por casillas.
+    // Esto reduce bastante el trabajo de la GPU con los modelos FBX.
+    if (tiempoMs - ultimoRender < 1000 / 30) return;
+    ultimoRender = tiempoMs;
     mundo.renderer.render(mundo.scene, mundo.camera);
 }
 
 function pausarPartida() {
-    if (pausado) return;
+    if (pausado || partidaFinalizada) return;
     pausado = true;
     mundo.renderer.setAnimationLoop(null);
     red?.enviarPausa(true);
@@ -279,18 +379,82 @@ function pausarPartida() {
 }
 
 function continuarPartida() {
-    if (!pausado) return;
+    if (!pausado || partidaFinalizada) return;
     pausado = false;
     modalPausa.hide();
     mundo.renderer.setAnimationLoop(renderLoop);
     red?.enviarPausa(false);
 }
 
+function calcularPuntuacionFinal(resultado, detalles = {}) {
+    const barcosHundidos = Math.max(0, Number(detalles.barcosHundidos) || 0);
+    const puntosExtra = Math.max(0, Number(detalles.puntosExtra) || 0);
+
+    let puntos = barcosHundidos * 100 + puntosExtra;
+    if (resultado === "victoria") puntos += 500;
+    if (configuracion.dificultad === "dificil") puntos += 150;
+    if (configuracion.modo === "rafaga") puntos += 50;
+
+    return puntos;
+}
+
+async function guardarUltimoResultado() {
+    if (!ultimoResultado) return;
+
+    estadoGuardadoResultado.textContent = "Guardando puntuación en MySQL...";
+    btnReintentarGuardado.hidden = true;
+
+    try {
+        if (!window.FleetAPI) throw new Error("FleetAPI no está disponible");
+        await window.FleetAPI.guardarPuntuacion(ultimoResultado);
+        estadoGuardadoResultado.textContent = "Puntuación guardada correctamente en MySQL.";
+    } catch (error) {
+        console.error("No se pudo guardar la puntuación:", error);
+        estadoGuardadoResultado.textContent = "No se pudo guardar todavía. Activa Apache/MySQL y usa REINTENTAR.";
+        btnReintentarGuardado.hidden = false;
+    }
+}
+
+async function finalizarPartida(resultado, detalles = {}) {
+    if (partidaFinalizada) return;
+
+    const resultadoLimpio = resultado === "victoria" ? "victoria" : "derrota";
+    const score = calcularPuntuacionFinal(resultadoLimpio, detalles);
+
+    partidaFinalizada = true;
+    pausado = true;
+    if (temporizadorIA) window.clearInterval(temporizadorIA);
+    mundo.renderer.setAnimationLoop(null);
+    modalPausa.hide();
+
+    ultimoResultado = {
+        nombre: perfil.nombre,
+        score,
+        resultado: resultadoLimpio,
+        modo: configuracion.modo,
+        mapa: configuracion.mapa,
+        dificultad: configuracion.dificultad
+    };
+
+    textoResultado.textContent = resultadoLimpio === "victoria" ? "VICTORIA" : "DERROTA";
+    puntosResultado.textContent = `${score} PUNTOS`;
+    estadoGuardadoResultado.textContent = "Preparando registro de la partida...";
+    modalResultado.show();
+
+    await guardarUltimoResultado();
+}
+
+// Punto de conexion para la futura logica de disparos y hundimientos.
+window.FleetGame = {
+    finalizarPartida,
+    calcularPuntuacionFinal
+};
+
 function iniciarModoIA() {
     estadoConexion.textContent = "MODO LOCAL // ACTIVO";
     estadoConexion.classList.add("ok");
-    estadoSala.textContent = "RIVAL // IA PROVISIONAL";
-    btnSala.disabled = true;
+    estadoSala.textContent = "RIVAL // IA";
+    btnSala.hidden = true;
 
     prepararFlotaLocal(1);
     flotaRemota = crearFlotaProvisional({
@@ -302,7 +466,14 @@ function iniciarModoIA() {
     });
     flotaRemota.forEach((barco) => { barco.userData.seleccionable = false; });
 
-    mensajeJuego.textContent = "Modo IA de prueba: la flota rival realiza movimientos simples mientras desarrollamos la lógica final.";
+    const modeloIA = configuracion.dificultad === "dificil"
+        ? (modeloEnemigoDificil || modeloEstandar)
+        : modeloEstandar;
+    colocarModeloEnFlota(flotaRemota, modeloIA);
+
+    mensajeJuego.textContent = configuracion.dificultad === "dificil"
+        ? "IA dificil activa: la flota rival utiliza el modelo especial."
+        : "Modo IA activo: selecciona tu barco y muévelo con teclado o mouse.";
 
     temporizadorIA = window.setInterval(() => {
         if (pausado || !flotaRemota.length) return;
@@ -321,10 +492,14 @@ function iniciarModoIA() {
 function actualizarSala(datos) {
     const jugadores = datos?.jugadores || [];
     const codigo = datos?.codigo || red?.sala || "--";
-    estadoSala.textContent = `SALA // ${codigo} // ${jugadores.length}/2`;
+    estadoSala.textContent = `SALA ${codigo} / ${jugadores.length}/2`;
     estadoSala.classList.toggle("ok", jugadores.length === 2);
     estadoSala.classList.toggle("alerta", jugadores.length < 2);
-    estadoLobby.textContent = `Sala ${codigo}: ${jugadores.map((j) => `J${j.slot} ${j.nombre}`).join(" · ") || "sin jugadores"}`;
+    if (jugadores.length === 2) {
+        estadoLobby.textContent = `Sala ${codigo} · J1 ${jugadores.find((j) => j.slot === 1)?.nombre || ""} · J2 ${jugadores.find((j) => j.slot === 2)?.nombre || ""}`;
+    } else {
+        estadoLobby.textContent = `Sala ${codigo} · ${jugadores[0]?.nombre || "Jugador"} · esperando jugador 2`;
+    }
 
     salaConDosJugadores = jugadores.length === 2;
 
@@ -357,7 +532,7 @@ async function entrarSala(accion) {
 
     codigoSala.value = respuesta.codigo;
     prepararFlotaLocal(respuesta.slot);
-    estadoSala.textContent = `SALA // ${respuesta.codigo} // 1/2`;
+    estadoSala.textContent = `SALA ${respuesta.codigo} / 1/2`;
     estadoLobby.textContent = `Conectado como Jugador ${respuesta.slot}. Código: ${respuesta.codigo}`;
     red.enviarFlota(serializarFlota(flotaLocal));
 }
@@ -368,6 +543,16 @@ function iniciarModoOnline() {
             estadoConexion.textContent = conectado ? "SERVIDOR // CONECTADO" : "SERVIDOR // DESCONECTADO";
             estadoConexion.classList.toggle("ok", conectado);
             estadoConexion.classList.toggle("alerta", !conectado);
+        },
+        salaPerdida(mensaje) {
+            estadoSala.textContent = "SALA -- / 0/2";
+            estadoLobby.textContent = mensaje;
+            modalSala.show();
+        },
+        reconexionSala(respuesta) {
+            if (!slotLocal) prepararFlotaLocal(respuesta.slot);
+            red.enviarFlota(serializarFlota(flotaLocal));
+            estadoLobby.textContent = `Sala ${respuesta.codigo} recuperada.`;
         },
         sala: actualizarSala,
         estadoBarco(estado) {
@@ -388,11 +573,16 @@ function iniciarModoOnline() {
         }
     });
 
+    btnSala.hidden = false;
+    estadoSala.textContent = "SALA -- / 0/2";
     estadoJugador.textContent = "MULTIJUGADOR // SIN SALA";
-    window.setTimeout(() => modalSala.show(), 220);
+    window.setTimeout(() => {
+        if (!red.sala) modalSala.show();
+    }, 220);
 }
 
-mundo.renderer.domElement.addEventListener("pointerdown", alPulsarCanvas);
+mundo.renderer.domElement.addEventListener("pointerdown", registrarInicioPuntero);
+mundo.renderer.domElement.addEventListener("pointerup", procesarFinPuntero);
 document.addEventListener("keydown", alPulsarTecla, true);
 btnSala.addEventListener("click", () => modalSala.show());
 btnCrearSala.addEventListener("click", () => entrarSala("crear"));
@@ -405,13 +595,22 @@ btnVolverDashboard.addEventListener("click", () => {
     window.location.href = "dashboard.html";
 });
 
+btnReintentarGuardado.addEventListener("click", guardarUltimoResultado);
+btnVerPuntuaciones.addEventListener("click", () => {
+    window.location.href = "puntuaciones.html?from=dashboard";
+});
+btnResultadoDashboard.addEventListener("click", () => {
+    red?.salirSala();
+    window.location.href = "dashboard.html";
+});
+
 codigoSala.addEventListener("input", () => {
     codigoSala.value = codigoSala.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
 });
 
 window.addEventListener("beforeunload", () => {
     if (temporizadorIA) window.clearInterval(temporizadorIA);
-    red?.salirSala();
+    // No se borra la sala aquí: Socket.IO puede reconectar la pestaña y recuperar su lugar.
     mundo.dispose();
 });
 

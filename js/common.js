@@ -180,12 +180,29 @@
         }
     }
 
-    function usuarioActual() {
+    function guardarSesion(perfil) {
+        sessionStorage.setItem(CLAVES.sesion, JSON.stringify(perfil));
+    }
+
+    function obtenerPerfil() {
         try {
-            return sessionStorage.getItem(CLAVES.sesion) || "";
+            const valor = sessionStorage.getItem(CLAVES.sesion);
+            if (!valor) return null;
+
+            try {
+                const perfil = JSON.parse(valor);
+                return perfil?.nombre ? perfil : null;
+            } catch (_error) {
+                // Compatibilidad con sesiones antiguas que solo guardaban el nombre.
+                return { nombre: valor, proveedor: "local" };
+            }
         } catch (_error) {
-            return "";
+            return null;
         }
+    }
+
+    function usuarioActual() {
+        return obtenerPerfil()?.nombre || "";
     }
 
     function iniciarSesion(usuario, password) {
@@ -200,21 +217,35 @@
             return { ok: false, mensaje: "La contraseña debe tener al menos 4 caracteres." };
         }
 
-        sessionStorage.setItem(CLAVES.sesion, nombre);
-        return { ok: true, usuario: { nombre }, nuevo: false };
+        const perfil = { nombre, proveedor: "local" };
+        guardarSesion(perfil);
+        return { ok: true, usuario: perfil, nuevo: false };
+    }
+
+    function iniciarSesionExterna({ nombre, proveedor, idExterno = "", email = "" }) {
+        const nombreLimpio = String(nombre || "").trim();
+
+        if (nombreLimpio.length < 2) {
+            return { ok: false, mensaje: "No fue posible obtener un nombre válido del proveedor externo." };
+        }
+
+        const perfil = {
+            nombre: nombreLimpio,
+            proveedor: String(proveedor || "externo"),
+            idExterno: String(idExterno || ""),
+            email: String(email || "")
+        };
+
+        guardarSesion(perfil);
+        return { ok: true, usuario: perfil };
     }
 
     function cerrarSesion() {
         sessionStorage.removeItem(CLAVES.sesion);
     }
 
-    function obtenerPerfil() {
-        const nombre = usuarioActual();
-        return nombre ? { nombre } : null;
-    }
-
     function registrarResultado() {
-        console.warn("Los puntajes oficiales deben registrarse mediante el Web Service y MySQL.");
+        console.warn("Los puntajes oficiales se registran mediante FleetAPI y MySQL.");
         return false;
     }
 
@@ -250,6 +281,7 @@
         iniciarMusica,
         alternarPantallaCompleta,
         iniciarSesion,
+        iniciarSesionExterna,
         cerrarSesion,
         usuarioActual,
         obtenerPerfil,

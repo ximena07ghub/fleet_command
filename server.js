@@ -21,13 +21,18 @@ const paginas = new Set([
     "perfil.html",
     "reglas.html",
     "pause.html",
-    "puntuaciones.html"
+    "puntuaciones.html",
+    "privacidad.html",
+    "eliminacion-datos.html",
+    "terminos.html"
 ]);
 
 app.disable("x-powered-by");
 app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/js", express.static(path.join(__dirname, "js")));
 app.use("/assets", express.static(path.join(__dirname, "assets")));
+// Carpeta publica donde se encuentran los modelos y recursos 3D.
+app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/ejercicio", express.static(path.join(__dirname, "ejercicio")));
 app.use("/vendor/three", express.static(path.join(__dirname, "node_modules", "three")));
 
@@ -51,6 +56,8 @@ app.use((_req, res) => {
 });
 
 const salas = new Map();
+const TIEMPO_RECONEXION_MS = 30 * 1000;
+const RETENCION_SALA_MS = 2 * 60 * 1000;
 
 function crearCodigoSala() {
     const alfabeto = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -69,18 +76,24 @@ function normalizarCodigo(valor) {
     return String(valor || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
 }
 
+function normalizarClienteId(valor, socketId) {
+    return String(valor || socketId).trim().slice(0, 80) || socketId;
+}
+
 function datosSala(codigo) {
     const sala = salas.get(codigo);
     if (!sala) return null;
 
     return {
         codigo,
-        jugadores: [...sala.jugadores.values()].map((jugador) => ({
-            socketId: jugador.socketId,
-            nombre: jugador.nombre,
-            slot: jugador.slot,
-            listo: Boolean(jugador.listo)
-        }))
+        jugadores: [...sala.jugadores.values()]
+            .filter((jugador) => jugador.conectado)
+            .map((jugador) => ({
+                socketId: jugador.socketId,
+                nombre: jugador.nombre,
+                slot: jugador.slot,
+                listo: true
+            }))
     };
 }
 
@@ -89,46 +102,141 @@ function publicarSala(codigo) {
     if (datos) io.to(codigo).emit("sala:estado", datos);
 }
 
-function salirDeSala(socket) {
+function cancelarEliminacionSala(sala) {
+    if (!sala?.timerEliminacion) return;
+    clearTimeout(sala.timerEliminacion);
+    sala.timerEliminacion = null;
+}
+
+function programarEliminacionSala(codigo, sala) {
+    cancelarEliminacionSala(sala);
+    sala.timerEliminacion = setTimeout(() => {
+        const actual = salas.get(codigo);
+        if (actual && actual.jugadores.size === 0) {
+            salas.delete(codigo);
+            console.log(`[SALA] ${codigo} eliminada por inactividad.`);
+        }
+    }, RETENCION_SALA_MS);
+}
+
+function cancelarSalidaJugador(jugador) {
+    if (!jugador?.timerSalida) return;
+    clearTimeout(jugador.timerSalida);
+    jugador.timerSalida = null;
+}
+
+function programarSalidaJugador(codigo, clienteId, jugador) {
+    cancelarSalidaJugador(jugador);
+
+    jugador.timerSalida = setTimeout(() => {
+        const sala = salas.get(codigo);
+        const actual = sala?.jugadores.get(clienteId);
+        if (!sala || !actual || actual.conectado) return;
+
+        sala.jugadores.delete(clienteId);
+        publicarSala(codigo);
+
+        if (sala.jugadores.size === 0) {
+            programarEliminacionSala(codigo, sala);
+        }
+    }, TIEMPO_RECONEXION_MS);
+}
+
+function salirDeSala(socket, inmediato = false) {
     const codigo = socket.data.sala;
-    if (!codigo || !salas.has(codigo)) return;
+    const clienteId = socket.data.clienteId;
+    if (!codigo || !clienteId || !salas.has(codigo)) return;
 
     const sala = salas.get(codigo);
-    sala.jugadores.delete(socket.id);
+    const jugador = sala.jugadores.get(clienteId);
+
     socket.leave(codigo);
     socket.data.sala = null;
     socket.data.slot = null;
 
-    if (sala.jugadores.size === 0) {
-        salas.delete(codigo);
-        return;
+    if (!jugador || jugador.socketId !== socket.id) return;
+
+    if (inmediato) {
+        cancelarSalidaJugador(jugador);
+        sala.jugadores.delete(clienteId);
+    } else {
+        jugador.conectado = false;
+        jugador.socketId = null;
+        programarSalidaJugador(codigo, clienteId, jugador);
     }
 
     publicarSala(codigo);
+
+    if (sala.jugadores.size === 0) {
+        programarEliminacionSala(codigo, sala);
+    }
 }
 
-function unirJugador(socket, codigo, nombre) {
+function unirJugador(socket, codigo, nombre, clienteIdRecibido) {
     const sala = salas.get(codigo);
-    if (!sala) return { ok: false, mensaje: "La sala no existe." };
-    if (sala.jugadores.size >= 2) return { ok: false, mensaje: "La sala ya tiene dos jugadores." };
+    if (!sala) {
+        return { ok: false, mensaje: "La sala no existe. Verifica el código y vuelve a intentarlo." };
+    }
 
-    salirDeSala(socket);
+    const clienteId = normalizarClienteId(clienteIdRecibido, socket.id);
+    const existente = sala.jugadores.get(clienteId);
+
+    // Si la misma pestaña se reconecta, recupera su mismo lugar en la sala.
+    if (existente) {
+        cancelarSalidaJugador(existente);
+        cancelarEliminacionSala(sala);
+
+        const socketAnterior = existente.socketId ? io.sockets.sockets.get(existente.socketId) : null;
+        if (socketAnterior && socketAnterior.id !== socket.id) {
+            socketAnterior.leave(codigo);
+            socketAnterior.data.sala = null;
+            socketAnterior.data.slot = null;
+        }
+
+        existente.socketId = socket.id;
+        existente.nombre = String(nombre || existente.nombre).trim().slice(0, 24) || existente.nombre;
+        existente.conectado = true;
+
+        socket.join(codigo);
+        socket.data.sala = codigo;
+        socket.data.slot = existente.slot;
+        socket.data.clienteId = clienteId;
+
+        publicarSala(codigo);
+        console.log(`[SALA] ${codigo}: J${existente.slot} reconectado.`);
+        return { ok: true, codigo, slot: existente.slot, socketId: socket.id, recuperada: true };
+    }
+
+    if (sala.jugadores.size >= 2) {
+        return { ok: false, mensaje: "La sala ya tiene dos jugadores." };
+    }
+
+    // Si este socket estaba en otra sala, sale de ella antes de entrar a la nueva.
+    if (socket.data.sala && socket.data.sala !== codigo) {
+        salirDeSala(socket, true);
+    }
+
+    cancelarEliminacionSala(sala);
 
     const slotsUsados = new Set([...sala.jugadores.values()].map((j) => j.slot));
     const slot = slotsUsados.has(1) ? 2 : 1;
     const jugador = {
+        clienteId,
         socketId: socket.id,
         nombre: String(nombre || `Jugador ${slot}`).trim().slice(0, 24) || `Jugador ${slot}`,
         slot,
-        listo: true
+        conectado: true,
+        timerSalida: null
     };
 
-    sala.jugadores.set(socket.id, jugador);
+    sala.jugadores.set(clienteId, jugador);
     socket.join(codigo);
     socket.data.sala = codigo;
     socket.data.slot = slot;
+    socket.data.clienteId = clienteId;
 
     publicarSala(codigo);
+    console.log(`[SALA] ${codigo}: J${slot} conectado (${jugador.nombre}).`);
     return { ok: true, codigo, slot, socketId: socket.id };
 }
 
@@ -137,8 +245,9 @@ io.on("connection", (socket) => {
 
     socket.on("sala:crear", (datos = {}, responder = () => {}) => {
         const codigo = crearCodigoSala();
-        salas.set(codigo, { jugadores: new Map() });
-        responder(unirJugador(socket, codigo, datos.nombre));
+        salas.set(codigo, { jugadores: new Map(), timerEliminacion: null });
+        console.log(`[SALA] creada ${codigo}.`);
+        responder(unirJugador(socket, codigo, datos.nombre, datos.clienteId));
     });
 
     socket.on("sala:unirse", (datos = {}, responder = () => {}) => {
@@ -147,11 +256,12 @@ io.on("connection", (socket) => {
             responder({ ok: false, mensaje: "Escribe un código de sala." });
             return;
         }
-        responder(unirJugador(socket, codigo, datos.nombre));
+
+        responder(unirJugador(socket, codigo, datos.nombre, datos.clienteId));
     });
 
     socket.on("sala:salir", (_datos, responder = () => {}) => {
-        salirDeSala(socket);
+        salirDeSala(socket, true);
         responder({ ok: true });
     });
 
@@ -204,10 +314,9 @@ io.on("connection", (socket) => {
         socket.to(codigo).emit("juego:pausaRival", Boolean(pausado));
     });
 
-    socket.on("disconnect", () => salirDeSala(socket));
+    socket.on("disconnect", () => salirDeSala(socket, false));
 });
 
 httpServer.listen(PORT, () => {
     console.log(`Fleet Command disponible en http://localhost:${PORT}`);
-    console.log("Abre otra ventana de Chrome o incógnito para probar multijugador.");
 });

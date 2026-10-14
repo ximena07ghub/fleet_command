@@ -1,6 +1,5 @@
 // Perfil de sesión; las estadísticas oficiales vienen del Web Service.
 const perfil = FleetApp.obtenerPerfil();
-const API_BASE = localStorage.getItem("fleetApiBaseUrl") || "http://localhost/fleet_command_api";
 
 if (!perfil) {
     window.location.href = "index.html";
@@ -13,37 +12,53 @@ if (!perfil) {
     const efectividad = document.getElementById("efectividadPerfil");
     const lista = document.getElementById("listaHistorial");
 
-    [partidas, victorias, derrotas, efectividad].forEach((elemento) => {
-        elemento.textContent = "—";
-    });
+    function mostrarHistorial(historial) {
+        lista.innerHTML = "";
+
+        if (!historial.length) {
+            lista.innerHTML = '<div class="historial-vacio">Todavía no hay partidas terminadas para este jugador.</div>';
+            return;
+        }
+
+        historial.forEach((partida) => {
+            const item = document.createElement("article");
+            item.className = `item-historial ${partida.resultado}`;
+
+            const resultado = document.createElement("span");
+            resultado.className = "resultado";
+            resultado.textContent = String(partida.resultado).toUpperCase();
+
+            const detalle = document.createElement("span");
+            detalle.className = "detalle";
+            detalle.textContent = `${Number(partida.score) || 0} pts · ${partida.modo} · ${partida.mapa} · ${partida.dificultad}`;
+
+            const fecha = document.createElement("time");
+            fecha.textContent = partida.fecha || "";
+
+            item.append(resultado, detalle, fecha);
+            lista.appendChild(item);
+        });
+    }
 
     async function cargarResumenRemoto() {
         try {
-            const respuesta = await fetch(`${API_BASE}/obtener_puntajes.php`, { cache: "no-store" });
-            if (!respuesta.ok) throw new Error("API no disponible");
-            const datos = await respuesta.json();
-            const fila = datos.puntuaciones?.find(
-                (item) => String(item.nombre).toLowerCase() === perfil.nombre.toLowerCase()
-            );
+            const datos = await FleetAPI.obtenerPerfil(perfil.nombre);
+            const resumen = datos.perfil;
 
-            const total = Number(fila?.partidas) || 0;
-            const ganadas = Number(fila?.victorias) || 0;
-            const perdidas = Math.max(0, total - ganadas);
-
-            partidas.textContent = total;
-            victorias.textContent = ganadas;
-            derrotas.textContent = perdidas;
-            efectividad.textContent = total ? `${Math.round((ganadas / total) * 100)}%` : "0%";
+            partidas.textContent = Number(resumen.partidas) || 0;
+            victorias.textContent = Number(resumen.victorias) || 0;
+            derrotas.textContent = Number(resumen.derrotas) || 0;
+            efectividad.textContent = `${Number(resumen.efectividad) || 0}%`;
+            mostrarHistorial(datos.historial || []);
+        } catch (error) {
+            console.error(error);
+            [partidas, victorias, derrotas, efectividad].forEach((elemento) => {
+                elemento.textContent = "—";
+            });
 
             lista.innerHTML = `
                 <div class="historial-vacio">
-                    Estadísticas consultadas desde MySQL. El historial detallado se conectará a este mismo Web Service en la entrega final.
-                </div>
-            `;
-        } catch (_error) {
-            lista.innerHTML = `
-                <div class="historial-vacio">
-                    Web Service sin configurar. No se usan puntuaciones guardadas en localStorage.
+                    No se pudo consultar MySQL. Revisa Apache, MySQL y el Web Service.
                 </div>
             `;
         }
